@@ -1,4 +1,3 @@
-
 # Created by https://www.toptal.com/developers/gitignore/api/java,intellij,gradle,macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,intellij,gradle,macos
 
@@ -181,6 +180,8 @@ gradle-app.setting
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
+
+
 
 ### Gradle Patch ###
 **/build/
