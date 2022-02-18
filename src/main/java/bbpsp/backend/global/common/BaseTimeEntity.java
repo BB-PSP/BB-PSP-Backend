@@ -16,17 +16,17 @@ import java.time.LocalDateTime;
 public class BaseTimeEntity {
 
     @CreatedDate
-    @Column(name = "created_time", updatable = false)
-    private LocalDateTime createdTime;
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(name = "updated_time")
-    private LocalDateTime updatedTime;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
-    @Column(name = "deleted_time")
-    private LocalDateTime deletedTime;
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
-    protected void recordDeletedTime(final LocalDateTime deletedTime) {
-        this.deletedTime = deletedTime;
+    protected void recordDeletedTime(final LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
     }
 }
