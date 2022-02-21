@@ -2,49 +2,46 @@ package bbpsp.backend.domain.team.dto.response;
 
 import bbpsp.backend.domain.team.domain.persist.Team;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TeamDTO {
 
     @ApiModelProperty(value = "팀 명(영문)", required = true, example = "Hanwha Eagles")
-    private String name;
+    private final String name;
 
     @ApiModelProperty(value = "연고지", required = true, example = "대전")
-    private String hometown;
+    private final String hometown;
 
     @ApiModelProperty(value = "컬러 로고 url", required = true, example = "serverURL/logoName_colour.png")
-    private String colourLogo;
+    private final String colourLogo;
 
     @ApiModelProperty(value = "흑백 로고 url", required = true, example = "serverURL/logoName_black.png")
-    private String blackLogo;
+    private final String blackLogo;
 
     @ApiModelProperty(value = "감독", required = true, example = "수베로")
-    private String headCoach;
+    private final String headCoach;
 
     @ApiModelProperty(value = "팀 홈페이지 주소", required = true, example = "https://www.hanwhaeagles.co.kr/index.do")
-    private String homepageUrl;
+    private final String homepageUrl;
 
     @ApiModelProperty(value = "설립 년도", required = true, example = "1983")
-    private int foundedAt;
+    private final int foundedAt;
 
     @ApiModelProperty(value = "팀 컬러", required = true, example = "#ff6600")
-    private String teamColour;
+    private final String teamColour;
 
     @ApiModelProperty(value = "우승 횟수", required = true, example = "1")
-    private int champCount;
+    private final int champCount;
 
     @ApiModelProperty(value = "해당 시즌 승 수(2021이 기본)", required = true, example = "49")
-    private int winCount;
+    private final int winCount;
 
     @ApiModelProperty(value = "해당 시즌 무승부 수(2021이 기본)", required = true, example = "12")
-    private int drawCount;
+    private final int drawCount;
 
     @ApiModelProperty(value = "해당 시즌 패배 수(2021이 기본)", required = true, example = "83")
-    private int defeatCount;
+    private final int defeatCount;
 
     public static TeamDTO createTeamDTO(Team team) {
         return new TeamDTO(team.getName(), team.getHometown(), team.getColourLogo(), team.getBlackLogo(),

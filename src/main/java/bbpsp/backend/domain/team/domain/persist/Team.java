@@ -1,6 +1,6 @@
 package bbpsp.backend.domain.team.domain.persist;
 
-import bbpsp.backend.domain.player.domain.persist.Season;
+import bbpsp.backend.domain.season.Season;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

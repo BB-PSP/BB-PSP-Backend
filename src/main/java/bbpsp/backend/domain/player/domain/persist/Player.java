@@ -2,6 +2,8 @@ package bbpsp.backend.domain.player.domain.persist;
 
 import bbpsp.backend.domain.player.enums.BatInfo;
 import bbpsp.backend.domain.player.enums.PitchInfo;
+import bbpsp.backend.domain.season.Season;
+import bbpsp.backend.domain.team.domain.persist.Team;
 import bbpsp.backend.global.common.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -9,9 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
 
 @Entity @Getter
 @Table(name = "player")
@@ -33,7 +33,7 @@ public class Player extends BaseTimeEntity {
     private Long age;
 
     @Column(name = "player_birth")
-    private LocalDateTime birth;
+    private LocalDate birth;
 
     @Column(name = "bat_info")
     @Enumerated(EnumType.STRING)
@@ -64,18 +64,28 @@ public class Player extends BaseTimeEntity {
     @Column(name = "player_back_number")
     private Long backNumber;
 
-    @OneToMany(mappedBy = "year", cascade = CascadeType.ALL)
-    private List<Year> yearList = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    private Team team;
 
-    public static Player createPlayer(String name, String imageUrl, Long age, LocalDateTime birth,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "season_id")
+    private Season season;
+
+//    @OneToMany(mappedBy = "player")
+//    private List<Active> activeList = new ArrayList<>();
+
+    public static Player createPlayer(Team team, Season season, String name, String imageUrl, Long age, LocalDate birth,
                                       BatInfo batInfo, PitchInfo pitchInfo, Double height, Double weight,
                                       String highSchool, String university, Long salary, Long faRemaining, Long backNumber) {
-        return new Player(name, imageUrl, age, birth, batInfo, pitchInfo, height, weight, highSchool, university, salary, faRemaining, backNumber);
+        return new Player(team, season, name, imageUrl, age, birth, batInfo, pitchInfo, height, weight, highSchool, university, salary, faRemaining, backNumber);
     }
 
-    private Player(String name, String imageUrl, Long age, LocalDateTime birth, BatInfo batInfo,
+    private Player(Team team, Season season, String name, String imageUrl, Long age, LocalDate birth, BatInfo batInfo,
                    PitchInfo pitchInfo, Double height, Double weight, String highSchool,
                    String university, Long salary, Long faRemaining, Long backNumber) {
+        this.team = team;
+        this.season = season;
         this.name = name;
         this.imageUrl = imageUrl;
         this.age = age;
@@ -92,6 +102,8 @@ public class Player extends BaseTimeEntity {
     }
 
     public void changePlayer(Player player) {
+        this.team = player.getTeam();
+        this.season = player.getTeam().getSeason();
         this.name = player.getName();
         this.imageUrl = player.getImageUrl();
         this.age = player.getAge();
