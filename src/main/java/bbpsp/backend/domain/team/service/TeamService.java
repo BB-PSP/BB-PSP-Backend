@@ -1,10 +1,10 @@
 package bbpsp.backend.domain.team.service;
 
-import bbpsp.backend.domain.player.domain.persist.Season;
+import bbpsp.backend.domain.season.Season;
 import bbpsp.backend.domain.team.domain.persist.Team;
 import bbpsp.backend.domain.team.dto.response.TeamDTO;
 import bbpsp.backend.domain.team.dto.response.TeamListDTO;
-import bbpsp.backend.domain.team.repository.SeasonRepository;
+import bbpsp.backend.domain.season.SeasonRepository;
 import bbpsp.backend.domain.team.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
