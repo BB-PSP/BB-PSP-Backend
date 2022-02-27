@@ -1,0 +1,65 @@
+package bbpsp.backend.domain.controller;
+
+import bbpsp.backend.domain.domain.persist.BatterStat;
+import bbpsp.backend.domain.dto.response.BatterStatNPlayerDTO;
+import bbpsp.backend.domain.service.BatterStatService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/batters")
+@RequiredArgsConstructor
+public class BatterStatController {
+
+    private final BatterStatService batterStatService;
+
+    /**
+     * 1. 특정 년도의 타자 전체 기록 가져오기(페이징)
+     * 2. 특정 타자(이름을 포함하면 다 나옴)의 전체 기록 가져오기
+     * 3. 특정 타자의 특정 년도 기록 가져오기
+     * 4. 특정 타자의 예측된 기록(3년치) 가져오기
+     * 5. 특정 타자의 예측된 기록(1년치) 가져오기
+     * 6. 미래 특정 시즌(3년 이내)의 예측된 타자 전체 기록 가져오기
+     *
+     */
+
+    // 1. 특정 년도의 타자 전체 기록 가져오기(페이징)
+    @GetMapping
+    @ApiOperation(value = "특정 년도의 전체 타자 기록 가져오기(페이징)", notes = "특정 년도의 전체 타자 기록(선수 정보 포함)을 페이징으로 가져오는 API")
+    public ResponseEntity<List<BatterStatNPlayerDTO>> findAllBattersByYear(
+            @ApiParam(value = "연도", required = true, example = "2021")
+            @RequestParam(value = "year", defaultValue = "2021") int year,
+            @ApiParam(value = "페이지 번호", required = true, example = "0")
+            @RequestParam(value = "offset", defaultValue = "0") int offset,
+            @ApiParam(value = "가져올 개수", required = true, example = "100")
+            @RequestParam(value = "limit", defaultValue = "100") int limit) {
+        return new ResponseEntity<>(batterStatService.findAllByYear(year, offset, limit), HttpStatus.OK);
+    }
+
+    // 2. 특정 타자(이름을 포함하면 다 나옴)의 전체 기록 가져오기
+    @GetMapping("/stat")
+    @ApiOperation(value = "특정 타자의 전체 기록 가져오기", notes = "특정 타자의 전체 기록을 가져오는 API, 해당 선수의 unique_id를 활용")
+    public ResponseEntity<List<BatterStatNPlayerDTO>> findAllOneBatter(
+            @ApiParam(value = "선수 고유 아이디", required = true, example = "3")
+            @RequestParam(value = "unique_id", defaultValue = "0") Long uniqueId) {
+        return new ResponseEntity<>(batterStatService.findAllWithOneBatter(uniqueId), HttpStatus.OK);
+    }
+
+    // 3. 특정 타자의 특정 년도 기록 가져오기
+    @GetMapping("/stat/{year}")
+    @ApiOperation(value = "특정 년도의 특정 타자 기록 가져오기", notes = "특정 년도의 특정 타자 기록을 연도와 unique_id를 활용해 가져오는 API")
+    public ResponseEntity<BatterStatNPlayerDTO> findOne(
+            @ApiParam(value = "연도", required = true, example = "2021")
+            @PathVariable(value = "year") int year,
+            @ApiParam(value = "선수 고유 아이디", required = true, example = "3")
+            @RequestParam(value = "unique_id") Long uniqueId) {
+        return new ResponseEntity<>(batterStatService.findOneByUniqueIdAndYear(year, uniqueId), HttpStatus.OK);
+    }
+
+}
