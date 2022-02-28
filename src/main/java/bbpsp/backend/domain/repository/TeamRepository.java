@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface TeamRepository extends JpaRepository<Team, Long> {
 
-    @Query("SELECT t FROM Team t WHERE t.season.id =:seasonId")
+    @Query("SELECT t FROM Team t WHERE t.season.id =:seasonId ORDER BY t.place ASC")
     @Transactional(readOnly = true)
     List<Team> findAllByYear(@Param("seasonId")Long seasonId);
 

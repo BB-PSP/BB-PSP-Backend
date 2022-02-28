@@ -54,6 +54,9 @@ public class Team {
     @Column(name = "team_defeat")
     private int defeatCount;
 
+    @Column(name = "team_linear_gradient")
+    private String linearGradient;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "season_id")
     private Season season;
@@ -61,12 +64,12 @@ public class Team {
 //    @OneToMany(mappedBy = "team")
 //    private List<Active> activeList = new ArrayList<>();
 
-    public static Team createTeam(String name, String hometown, String logoColour, String blackLogo,
-                                  String headCoach, String homepageUrl, int foundedAt, String teamColour, int champCount,
-                                  int place, int winCount, int drawCount, int defeatCount, Season season) {
-        return new Team(name, hometown, logoColour, blackLogo, headCoach, homepageUrl,
+    public static Team createTeam(Season season, String name, String hometown, String colourLogo, String blackLogo, String headCoach,
+                                  String homepageUrl, int foundedAt, String teamColour, int champCount, int place,
+                                  int winCount, int drawCount, int defeatCount, String linearGradient) {
+        return new Team(season, name, hometown, colourLogo, blackLogo, headCoach, homepageUrl,
                 foundedAt, teamColour, champCount, place,
-                winCount, drawCount, defeatCount, season);
+                winCount, drawCount, defeatCount, linearGradient);
     }
 
     public void changeTeam(Team team) {
@@ -83,12 +86,14 @@ public class Team {
         this.winCount = team.getWinCount();
         this.drawCount = team.getDrawCount();
         this.defeatCount = team.getDefeatCount();
+        this.linearGradient = team.getLinearGradient();
         this.season = team.getSeason();
     }
 
-    private Team(String name, String hometown, String colourLogo, String blackLogo,
-                 String headCoach, String homepageUrl, int foundedAt, String teamColour, int champCount,
-                 int place, int winCount, int drawCount, int defeatCount, Season season) {
+    private Team(Season season, String name, String hometown, String colourLogo, String blackLogo, String headCoach,
+                String homepageUrl, int foundedAt, String teamColour, int champCount, int place,
+                int winCount, int drawCount, int defeatCount, String linearGradient) {
+        this.season = season;
         this.name = name;
         this.hometown = hometown;
         this.colourLogo = colourLogo;
@@ -102,6 +107,6 @@ public class Team {
         this.winCount = winCount;
         this.drawCount = drawCount;
         this.defeatCount = defeatCount;
-        this.season = season;
+        this.linearGradient = linearGradient;
     }
 }
