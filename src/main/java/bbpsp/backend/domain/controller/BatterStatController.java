@@ -6,11 +6,15 @@ import bbpsp.backend.domain.service.BatterStatService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @RestController
 @RequestMapping("/api/batters")
@@ -46,9 +50,11 @@ public class BatterStatController {
     @GetMapping("/stat")
     @ApiOperation(value = "특정 타자의 전체 기록 가져오기", notes = "특정 타자의 전체 기록을 가져오는 API, 해당 선수의 unique_id를 활용")
     public ResponseEntity<List<BatterStatNPlayerDTO>> findAllOneBatter(
-            @ApiParam(value = "선수 고유 아이디", required = true, example = "3")
-            @RequestParam(value = "unique_id", defaultValue = "0") Long uniqueId) {
-        return new ResponseEntity<>(batterStatService.findAllWithOneBatter(uniqueId), HttpStatus.OK);
+            @ApiParam(value = "선수 이름", required = true, example = "이승호")
+            @RequestParam(value = "name") String name,
+            @ApiParam(value = "선수 생년월일", required = true, example = "1999-02-08")
+            @RequestParam(value = "birth") @DateTimeFormat(iso = DATE) LocalDate birth) {
+        return new ResponseEntity<>(batterStatService.findAllWithOneBatter(name, birth), HttpStatus.OK);
     }
 
     // 3. 특정 타자의 특정 년도 기록 가져오기
@@ -57,9 +63,11 @@ public class BatterStatController {
     public ResponseEntity<BatterStatNPlayerDTO> findOne(
             @ApiParam(value = "연도", required = true, example = "2021")
             @PathVariable(value = "year") int year,
-            @ApiParam(value = "선수 고유 아이디", required = true, example = "3")
-            @RequestParam(value = "unique_id") Long uniqueId) {
-        return new ResponseEntity<>(batterStatService.findOneByUniqueIdAndYear(year, uniqueId), HttpStatus.OK);
+            @ApiParam(value = "선수 이름", required = true, example = "이승호")
+            @RequestParam(value = "name") String name,
+            @ApiParam(value = "선수 생년월일", required = true, example = "1999-02-08")
+            @RequestParam(value = "birth") @DateTimeFormat(iso = DATE) LocalDate birth) {
+        return new ResponseEntity<>(batterStatService.findOneByUniqueIdAndYear(year, name, birth), HttpStatus.OK);
     }
 
 }

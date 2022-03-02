@@ -19,10 +19,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -51,9 +50,9 @@ public class BatterStatService {
         return list;
     }
 
-    public List<BatterStatNPlayerDTO> findAllWithOneBatter(Long uniqueId) {
+    public List<BatterStatNPlayerDTO> findAllWithOneBatter(String name, LocalDate birth) {
         List<BatterStatNPlayerDTO> batterStatNPlayerDTOList = new ArrayList<>();
-        playerRepository.findByUniqueId(uniqueId)
+        playerRepository.findByNameAndBirth(name, birth)
                 .stream()
                 .filter(p -> p.getPosition().equals(PositionInfo.BATTER))
                 .forEach(p -> {
@@ -67,12 +66,12 @@ public class BatterStatService {
     }
 
 
-    public BatterStatNPlayerDTO findOneByUniqueIdAndYear(int year, Long uniqueId) {
+    public BatterStatNPlayerDTO findOneByUniqueIdAndYear(int year, String name, LocalDate birth) {
         Season season = seasonRepository.findByYear(year)
                 .orElseThrow(() -> new NoSuchSeasonException(ErrorCode.NO_SUCH_SEASON));
-        Player player = playerRepository.findByUniqueId(uniqueId)
+        Player player = playerRepository.findByNameAndBirth(name, birth)
                 .stream()
-                .filter(p -> p.getSeason().getId().equals(season.getId()) && p.getPosition().equals(PositionInfo.BATTER))
+                .filter(p -> p.getTeam().getSeason().getId().equals(season.getId()) && p.getPosition().equals(PositionInfo.BATTER))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchPlayerException(ErrorCode.NO_SUCH_PLAYER));
         BatterStat batterStat = batterStatRepository.findById(player.getBatterStat().getId())

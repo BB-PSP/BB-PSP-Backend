@@ -5,6 +5,7 @@ import bbpsp.backend.domain.domain.persist.Season;
 import bbpsp.backend.domain.domain.persist.Team;
 import bbpsp.backend.domain.dto.response.TeamDTO;
 import bbpsp.backend.domain.dto.response.TeamListDTO;
+import bbpsp.backend.domain.execption.NoSuchTeamException;
 import bbpsp.backend.domain.repository.SeasonRepository;
 import bbpsp.backend.domain.repository.TeamRepository;
 import bbpsp.backend.global.error.exception.ErrorCode;
@@ -35,9 +36,8 @@ public class TeamService {
     }
 
     public Map<String, TeamDTO> findOne(int year, String symbolName) {
-        Season season = seasonRepository.findByYear(year)
-                .orElseThrow(() -> new NoSuchSeasonException(ErrorCode.NO_SUCH_SEASON));
-        Team team = teamRepository.findOneByYearAndSymbol(season.getId(), symbolName).orElseThrow();
+        Team team = teamRepository.findOneByYearAndSymbol(year, symbolName)
+                .orElseThrow(() -> new NoSuchTeamException(ErrorCode.NO_SUCH_TEAM));
         TeamDTO teamDTO = TeamDTO.createTeamDTO(team);
         Map<String, TeamDTO> map = new ConcurrentHashMap<>();
         map.put(team.getName(), teamDTO);

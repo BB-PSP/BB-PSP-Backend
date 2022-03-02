@@ -4,6 +4,8 @@ import bbpsp.backend.domain.domain.persist.Team;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
+import javax.persistence.Column;
+
 @Getter
 public class TeamDTO {
 
@@ -43,16 +45,22 @@ public class TeamDTO {
     @ApiModelProperty(value = "해당 시즌 패배 수(2021이 기본)", required = true, example = "83")
     private final int defeatCount;
 
+    @ApiModelProperty(value = "해당 시즌 최종 순위(포스트 시즌 포함)", required = true, example = "3")
+    private int place;
+
+    @ApiModelProperty(value = "linearGradient", required = true, example = "180deg, #000000 3.12%, rgba(0, 0, 0, 0.9) 53.65% ...")
+    private String linearGradient;
+
     public static TeamDTO createTeamDTO(Team team) {
         return new TeamDTO(team.getName(), team.getHometown(), team.getColourLogo(), team.getBlackLogo(),
                 team.getHeadCoach(), team.getHomepageUrl(), team.getFoundedAt(),
                 team.getTeamColour(), team.getChampCount(), team.getWinCount(),
-                team.getDrawCount(), team.getDefeatCount());
+                team.getDrawCount(), team.getDefeatCount(), team.getPlace(), team.getLinearGradient());
     }
 
     private TeamDTO(String name, String hometown, String colourLogo, String blackLogo,
                    String headCoach, String homepageUrl, int foundedAt, String teamColour,
-                   int champCount, int winCount, int drawCount, int defeatCount) {
+                   int champCount, int winCount, int drawCount, int defeatCount, int place, String linearGradient) {
         this.name = name;
         this.hometown = hometown;
         this.colourLogo = colourLogo;
@@ -65,5 +73,7 @@ public class TeamDTO {
         this.winCount = winCount;
         this.drawCount = drawCount;
         this.defeatCount = defeatCount;
+        this.linearGradient = linearGradient;
+        this.place = place;
     }
 }

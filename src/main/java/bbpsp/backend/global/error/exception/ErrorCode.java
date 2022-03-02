@@ -17,7 +17,7 @@ public enum ErrorCode {
     NO_SUCH_SEASON(404, "S001", "존재하지 않는 시즌입니다."),
 
     // Team
-
+    NO_SUCH_TEAM(404, "T001", "존재하지 않는 팀입니다."),
     // Player
     NO_SUCH_PLAYER(404, "P001", "존재하지 않는 선수입니다."),
 
