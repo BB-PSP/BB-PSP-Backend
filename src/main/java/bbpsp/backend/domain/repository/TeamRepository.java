@@ -15,7 +15,7 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     @Transactional(readOnly = true)
     List<Team> findAllByYear(@Param("seasonId")Long seasonId);
 
-    @Query("SELECT t FROM Team t WHERE t.season.id =:seasonId AND t.name LIKE %:symbolName%")
+    @Query("SELECT t FROM Team t WHERE t.season.year =:year AND t.name LIKE %:symbolName%")
     @Transactional(readOnly = true)
-    Optional<Team> findOneByYearAndSymbol(@Param("seasonId")Long yearId, @Param("symbolName")String symbolName);
+    Optional<Team> findOneByYearAndSymbol(@Param("year")int year, @Param("symbolName")String symbolName);
 }

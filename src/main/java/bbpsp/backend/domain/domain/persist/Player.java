@@ -67,19 +67,15 @@ public class Player extends BaseTimeEntity {
     private int faRemaining;
 
     @Column(name = "player_back_number")
-    private int backNumber;
-
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "player_unique_id")
-    private PlayerUnique playerUnique;
+    private String backNumber;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "season_id")
-    private Season season;
+//    @ManyToOne(fetch = LAZY)
+//    @JoinColumn(name = "season_id")
+//    private Season season;
 
 //    @OneToOne(mappedBy = "player", fetch = LAZY)
 //    private BatterStat batterStat;
@@ -98,18 +94,16 @@ public class Player extends BaseTimeEntity {
 //    @OneToMany(mappedBy = "player")
 //    private List<Active> activeList = new ArrayList<>();
 
-    public static Player createPlayer(PlayerUnique playerUnique, Team team, Season season, String name, String imageUrl, int age, LocalDate birth, PositionInfo position, BatInfo batInfo,
+    public static Player createPlayer(Team team, String name, String imageUrl, int age, LocalDate birth, PositionInfo position, BatInfo batInfo,
                                       PitchInfo pitchInfo, Double height, Double weight, String highSchool, String university,
-                                      int salary, int faRemaining, int backNumber, BatterStat batterStat, PitcherStat pitcherStat) {
-        return new Player(playerUnique, team, season, name, imageUrl,
+                                      int salary, int faRemaining, String backNumber, BatterStat batterStat, PitcherStat pitcherStat) {
+        return new Player(team, name, imageUrl,
                 age, birth, position, batInfo, pitchInfo, height, weight,
                 highSchool, university, salary, faRemaining, backNumber, batterStat, pitcherStat);
     }
 
     public void changePlayer(Player player) {
-        this.playerUnique = player.getPlayerUnique();
         this.team = player.getTeam();
-        this.season = player.getTeam().getSeason();
         this.name = player.getName();
         this.imageUrl = player.getImageUrl();
         this.age = player.getAge();
@@ -131,10 +125,9 @@ public class Player extends BaseTimeEntity {
         this.batterStat = batterStat;
     }
 
-    private Player(PlayerUnique playerUnique, Team team, Season season, String name, String imageUrl, int age, LocalDate birth, PositionInfo position, BatInfo batInfo,
+    private Player(Team team, String name, String imageUrl, int age, LocalDate birth, PositionInfo position, BatInfo batInfo,
                   PitchInfo pitchInfo, Double height, Double weight, String highSchool, String university,
-                  int salary, int faRemaining, int backNumber, BatterStat batterStat, PitcherStat pitcherStat) {
-        this.playerUnique = playerUnique;
+                  int salary, int faRemaining, String backNumber, BatterStat batterStat, PitcherStat pitcherStat) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.age = age;
@@ -150,7 +143,6 @@ public class Player extends BaseTimeEntity {
         this.faRemaining = faRemaining;
         this.backNumber = backNumber;
         this.team = team;
-        this.season = season;
         this.batterStat = batterStat;
         this.pitcherStat = pitcherStat;
     }

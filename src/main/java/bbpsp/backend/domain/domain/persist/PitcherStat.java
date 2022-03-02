@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import static javax.persistence.FetchType.LAZY;
 
 @Entity @Getter
 @Table(name = "pticher_stat")
@@ -17,35 +16,64 @@ public class PitcherStat {
     @Column(name = "pitcher_stat_id")
     private Long id;
 
-    private Double ERA;
-    private Long G;
-    private Long SHO;
-    private Long W;
-    private Long L;
-    private Long SV;
-    private Long HLD;
-    private Double WPCT;
-    private Long TBF;
-    private Double IP;
-    private Long H;
-    private Long HR;
-    private Long BB;
-    private Long HBP;
-    private Long SO;
-    private Long R;
-    private Long ER;
+    @Column(name = "_ERA")
+    private double ERA;
 
-    @OneToOne(fetch = LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "player_id")
-    private Player player;
+    @Column(name = "_G")
+    private int G;
 
-    public static PitcherStat createPitcherStat(Double ERA, Long G, Long SHO, Long W,
-                                                Long L, Long SV, Long HLD, Double WPCT,
-                                                Long TBF, Double IP, Long H, Long HR, Long BB, Long HBP,
-                                                Long SO, Long R, Long ER, Player player) {
+    @Column(name = "_SHO")
+    private int SHO;
+
+    @Column(name = "_W")
+    private int W;
+
+    @Column(name = "_L")
+    private int L;
+
+    @Column(name = "_SV")
+    private int SV;
+
+    @Column(name = "_HLD")
+    private int HLD;
+
+    @Column(name = "_WPCT")
+    private double WPCT;
+
+    @Column(name = "_TBF")
+    private int TBF;
+
+    @Column(name = "_IP")
+    private double IP;
+
+    @Column(name = "_H")
+    private int H;
+
+    @Column(name = "_HR")
+    private int HR;
+
+    @Column(name = "_BB")
+    private int BB;
+
+    @Column(name = "_HBP")
+    private int HBP;
+
+    @Column(name = "_SO")
+    private int SO;
+
+    @Column(name = "_R")
+    private int R;
+
+    @Column(name = "_ER")
+    private int ER;
+
+    public static PitcherStat createPitcherStat(double ERA, int G, int SHO, int W,
+                                                int L, int SV, int HLD, double WPCT,
+                                                int TBF, double IP, int H, int HR, int BB, int HBP,
+                                                int SO, int R, int ER) {
         return new PitcherStat(
-                ERA, G, SHO, W, L, SV, HLD, WPCT, TBF, IP,
-                H, HR, BB, HBP, SO, R, ER, player
+                ERA, G, SHO, W, L, SV, HLD, WPCT,
+                TBF, IP, H, HR, BB, HBP, SO, R, ER
         );
     }
 
@@ -67,13 +95,12 @@ public class PitcherStat {
         this.SO = pitcherStat.getSO();
         this.R = pitcherStat.getR();
         this.ER = pitcherStat.getER();
-        this.player = pitcherStat.getPlayer();
     }
 
-    private PitcherStat(Double ERA, Long G, Long SHO, Long W,
-                       Long L, Long SV, Long HLD, Double WPCT,
-                       Long TBF, Double IP, Long H, Long HR, Long BB, Long HBP,
-                       Long SO, Long R, Long ER, Player player) {
+    private PitcherStat(double ERA, int G, int SHO, int W,
+                       int L, int SV, int HLD, double WPCT,
+                       int TBF, double IP, int H, int HR, int BB, int HBP,
+                       int SO, int R, int ER) {
         this.ERA = ERA;
         this.G = G;
         this.SHO = SHO;
@@ -91,6 +118,5 @@ public class PitcherStat {
         this.SO = SO;
         this.R = R;
         this.ER = ER;
-        this.player = player;
     }
 }

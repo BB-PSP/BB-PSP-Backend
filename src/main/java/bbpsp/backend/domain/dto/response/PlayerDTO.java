@@ -3,6 +3,7 @@ package bbpsp.backend.domain.dto.response;
 import bbpsp.backend.domain.domain.persist.Player;
 import bbpsp.backend.domain.enums.BatInfo;
 import bbpsp.backend.domain.enums.PitchInfo;
+import bbpsp.backend.domain.enums.PositionInfo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
@@ -12,9 +13,6 @@ import java.time.LocalDate;
 
 @Getter
 public class PlayerDTO {
-
-    @ApiModelProperty(value = "선수 고유 ID", required = true, example = "3")
-    private Long uniqueId;
 
     @ApiModelProperty(value = "시즌", required = true, example = "2021")
     private int year;
@@ -33,6 +31,10 @@ public class PlayerDTO {
 
     @ApiModelProperty(value = "출생", required = true, example = "1993-01-01")
     private LocalDate birth;
+
+    @ApiModelProperty(value = "투수/타자(야수) 여부", required = true, example = "PITCHER, BATTER")
+    @Enumerated(EnumType.STRING)
+    private PositionInfo position;
 
     @ApiModelProperty(value = "타격 손 정보(우타, 좌타, 스위치) 이니셜로 표시함", required = true, example = "RIGHT, LEFT, SWITCH")
     @Enumerated(EnumType.STRING)
@@ -61,19 +63,18 @@ public class PlayerDTO {
     private int faRemaining;
 
     @ApiModelProperty(value = "등번호", required = true, example = "99")
-    private int backNumber;
+    private String backNumber;
 
     public static PlayerDTO createPlayerDTO(Player player) {
-        return new PlayerDTO(player.getPlayerUnique().getId(), player.getSeason().getYear(), player.getName(), player.getTeam().getName(), player.getImageUrl(), player.getAge(),
-                player.getBirth(), player.getBatInfo(), player.getPitchInfo(), player.getHeight(),
+        return new PlayerDTO(player.getTeam().getSeason().getYear(), player.getName(), player.getTeam().getName(), player.getImageUrl(), player.getAge(),
+                player.getBirth(), player.getPosition(), player.getBatInfo(), player.getPitchInfo(), player.getHeight(),
                 player.getWeight(), player.getHighSchool(), player.getUniversity(), player.getSalary(),
                 player.getFaRemaining(), player.getBackNumber());
     }
 
-    private PlayerDTO(Long uniqueId, int year, String name, String team, String imageUrl, int age, LocalDate birth, BatInfo batInfo,
+    private PlayerDTO(int year, String name, String team, String imageUrl, int age, LocalDate birth, PositionInfo position, BatInfo batInfo,
                       PitchInfo pitchInfo, Double height, Double weight, String highSchool,
-                      String university, int salary, int faRemaining, int backNumber) {
-        this.uniqueId = uniqueId;
+                      String university, int salary, int faRemaining, String backNumber) {
         this.year = year;
         this.name = name;
         this.team = team;
@@ -89,5 +90,6 @@ public class PlayerDTO {
         this.salary = salary;
         this.faRemaining = faRemaining;
         this.backNumber = backNumber;
+        this.position = position;
     }
 }
