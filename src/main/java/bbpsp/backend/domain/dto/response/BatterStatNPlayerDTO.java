@@ -19,7 +19,7 @@ public class BatterStatNPlayerDTO {
         return new BatterStatNPlayerDTO(batterStatDTO, playerDTO);
     }
 
-    public BatterStatNPlayerDTO(BatterStatDTO batterStatDTO, PlayerDTO playerDTO) {
+    private BatterStatNPlayerDTO(BatterStatDTO batterStatDTO, PlayerDTO playerDTO) {
         this.batterStatDTO = batterStatDTO;
         this.playerDTO = playerDTO;
     }

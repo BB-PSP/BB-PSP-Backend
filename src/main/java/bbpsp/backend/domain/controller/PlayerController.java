@@ -3,6 +3,7 @@ package bbpsp.backend.domain.controller;
 import bbpsp.backend.domain.dto.response.PlayerDTO;
 import bbpsp.backend.domain.dto.response.PlayerListDTO;
 import bbpsp.backend.domain.service.PlayerService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/players")
+@Api(tags = "선수 정보 관련 API(성적 X)")
 public class PlayerController {
     /**
      * 1. 특정 시즌 특정 선수 정보 가져오기(성적 X)

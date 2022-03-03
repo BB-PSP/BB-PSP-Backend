@@ -22,7 +22,10 @@ public enum ErrorCode {
     NO_SUCH_PLAYER(404, "P001", "존재하지 않는 선수입니다."),
 
     // BatterStat
-    NO_SUCH_BATTER_STAT(404, "B001", "해당 선수의 타자 기록이 존재하지 않습니다.")
+    NO_SUCH_BATTER_STAT(404, "BS001", "해당 선수의 타자 기록이 존재하지 않습니다."),
+
+    // PitcherStat
+    NO_SUCH_PITCHER_STAT(404, "PS001", "해당 선수의 타자 기록이 존재하지 않습니다.")
 
     ;
 
