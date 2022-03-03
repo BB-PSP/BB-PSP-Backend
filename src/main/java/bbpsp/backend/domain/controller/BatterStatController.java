@@ -3,8 +3,7 @@ package bbpsp.backend.domain.controller;
 import bbpsp.backend.domain.domain.persist.BatterStat;
 import bbpsp.backend.domain.dto.response.BatterStatNPlayerDTO;
 import bbpsp.backend.domain.service.BatterStatService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -19,6 +18,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 @RestController
 @RequestMapping("/api/batters")
 @RequiredArgsConstructor
+@Api(tags = "타자 성적 관련 API")
 public class BatterStatController {
 
     private final BatterStatService batterStatService;

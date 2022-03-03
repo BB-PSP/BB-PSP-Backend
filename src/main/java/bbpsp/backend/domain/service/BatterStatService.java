@@ -79,6 +79,6 @@ public class BatterStatService {
 
         PlayerDTO playerDTO = PlayerDTO.createPlayerDTO(player);
         BatterStatDTO batterStatDTO = BatterStatDTO.createBatterStatDTO(batterStat);
-        return new BatterStatNPlayerDTO(batterStatDTO, playerDTO);
+        return BatterStatNPlayerDTO.createDTO(batterStatDTO, playerDTO);
     }
 }

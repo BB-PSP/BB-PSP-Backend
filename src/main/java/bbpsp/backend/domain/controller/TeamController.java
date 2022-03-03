@@ -3,6 +3,7 @@ package bbpsp.backend.domain.controller;
 import bbpsp.backend.domain.dto.response.TeamDTO;
 import bbpsp.backend.domain.dto.response.TeamListDTO;
 import bbpsp.backend.domain.service.TeamService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/teams")
+@Api(tags = "팀 정보 관련 API")
 public class TeamController {
 
     private final TeamService teamService;
