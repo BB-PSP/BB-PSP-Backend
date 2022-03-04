@@ -17,11 +17,7 @@ class BatterStatTest {
     @Autowired SeasonRepository seasonRepository;
     @Autowired PlayerRepository playerRepository;
     @Autowired TeamRepository teamRepository;
-    @Autowired
-    PlayerUniqueRepository playerUniqueRepository;
-
     @Autowired BatterStatRepository batterStatRepository;
-    @Autowired ActiveRepository activeRepository;
 
 
 
@@ -46,17 +42,14 @@ class BatterStatTest {
                 10, 30, 0, "--");
         teamRepository.save(team3);
 
-        PlayerUnique playerUnique = PlayerUnique.createEntity("강민재");
-        playerUniqueRepository.save(playerUnique);
-
-        Player player = Player.createPlayer(playerUnique, team, team.getSeason(), playerUnique.getName(), "image.url", 27, LocalDate.of(1993, 1, 1),
-                PositionInfo.PITCHER, BatInfo.RIGHT_HAND, PitchInfo.RIGHT_UNDER, 180.0, 75.0, "oo고",
-                "xx대학교", 10000, 3, 35, null, null);
+        Player player = Player.createPlayer(team, "강민재", "image.url", 27, LocalDate.of(1993, 1, 1),
+                PositionInfo.PITCHER, BatInfo.RIGHT_HAND, PitchInfo.RIGHT_UNDER, 180.0, 75.0, "oo고-xx대",
+                10000, 3, "35", null, null);
         playerRepository.save(player);
 
-        Player player2 = Player.createPlayer(playerUnique, team2, team2.getSeason(), playerUnique.getName(), "image.url2222", 27, LocalDate.of(1993, 1, 1),
-                PositionInfo.PITCHER, BatInfo.RIGHT_HAND, PitchInfo.RIGHT_UNDER, 180.0, 75.0, "oo고",
-                "xx대학교", 10000, 3, 35, null, null);
+        Player player2 = Player.createPlayer(team2, "강민재", "image.url2222", 27, LocalDate.of(1993, 1, 1),
+                PositionInfo.PITCHER, BatInfo.RIGHT_HAND, PitchInfo.RIGHT_UNDER, 180.0, 75.0, "oo고-ㅁㅁ대",
+                10000, 3, "35", null, null);
         playerRepository.save(player2);
 
 
