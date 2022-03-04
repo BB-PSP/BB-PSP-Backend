@@ -54,11 +54,8 @@ public class Player extends BaseTimeEntity {
     @Column(name = "player_weight")
     private Double weight;
 
-    @Column(name = "player_high_school")
-    private String highSchool;
-
-    @Column(name = "player_univ")
-    private String university;
+    @Column(name = "player_school")
+    private String school;
 
     @Column(name = "player_salary")
     private int salary;
@@ -94,12 +91,12 @@ public class Player extends BaseTimeEntity {
 //    @OneToMany(mappedBy = "player")
 //    private List<Active> activeList = new ArrayList<>();
 
-    public static Player createPlayer(Team team, String name, String imageUrl, int age, LocalDate birth, PositionInfo position, BatInfo batInfo,
-                                      PitchInfo pitchInfo, Double height, Double weight, String highSchool, String university,
+    public static Player createPlayer(Team team, String name, String imageUrl, int age, LocalDate birth, PositionInfo position,
+                                      BatInfo batInfo, PitchInfo pitchInfo, Double height, Double weight, String school,
                                       int salary, int faRemaining, String backNumber, BatterStat batterStat, PitcherStat pitcherStat) {
-        return new Player(team, name, imageUrl,
-                age, birth, position, batInfo, pitchInfo, height, weight,
-                highSchool, university, salary, faRemaining, backNumber, batterStat, pitcherStat);
+        return new Player(team, name, imageUrl, age, birth, position,
+                batInfo, pitchInfo, height, weight, school, salary,
+                faRemaining, backNumber, batterStat, pitcherStat);
     }
 
     public void changePlayer(Player player) {
@@ -112,8 +109,7 @@ public class Player extends BaseTimeEntity {
         this.pitchInfo = player.getPitchInfo();
         this.height = player.getHeight();
         this.weight = player.getWeight();
-        this.highSchool = player.getHighSchool();
-        this.university = player.getUniversity();
+        this.school = player.getSchool();
         this.salary = player.getSalary();
         this.faRemaining = player.getFaRemaining();
         this.backNumber = player.getBackNumber();
@@ -125,9 +121,9 @@ public class Player extends BaseTimeEntity {
         this.batterStat = batterStat;
     }
 
-    private Player(Team team, String name, String imageUrl, int age, LocalDate birth, PositionInfo position, BatInfo batInfo,
-                  PitchInfo pitchInfo, Double height, Double weight, String highSchool, String university,
-                  int salary, int faRemaining, String backNumber, BatterStat batterStat, PitcherStat pitcherStat) {
+    private Player(Team team, String name, String imageUrl, int age, LocalDate birth, PositionInfo position,
+                   BatInfo batInfo, PitchInfo pitchInfo, Double height, Double weight, String school,
+                   int salary, int faRemaining, String backNumber, BatterStat batterStat, PitcherStat pitcherStat) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.age = age;
@@ -137,8 +133,7 @@ public class Player extends BaseTimeEntity {
         this.pitchInfo = pitchInfo;
         this.height = height;
         this.weight = weight;
-        this.highSchool = highSchool;
-        this.university = university;
+        this.school = school;
         this.salary = salary;
         this.faRemaining = faRemaining;
         this.backNumber = backNumber;

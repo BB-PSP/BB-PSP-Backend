@@ -50,11 +50,8 @@ public class PlayerDTO {
     @ApiModelProperty(value = "몸무게(kg)", required = true, example = "75")
     private Double weight;
 
-    @ApiModelProperty(value = "출신 고교", required = true, example = "중앙고")
-    private String highSchool;
-
-    @ApiModelProperty(value = "출신 대학(null 가능)", required = false, example = "건국대")
-    private String university;
+    @ApiModelProperty(value = "출신 학교", required = true, example = "중앙고-건국대")
+    private String school;
 
     @ApiModelProperty(value = "연봉(만원 단위)", required = true, example = "12000(=1억2천)")
     private int salary;
@@ -68,13 +65,13 @@ public class PlayerDTO {
     public static PlayerDTO createPlayerDTO(Player player) {
         return new PlayerDTO(player.getTeam().getSeason().getYear(), player.getName(), player.getTeam().getName(), player.getImageUrl(), player.getAge(),
                 player.getBirth(), player.getPosition(), player.getBatInfo(), player.getPitchInfo(), player.getHeight(),
-                player.getWeight(), player.getHighSchool(), player.getUniversity(), player.getSalary(),
+                player.getWeight(), player.getSchool(), player.getSalary(),
                 player.getFaRemaining(), player.getBackNumber());
     }
 
     private PlayerDTO(int year, String name, String team, String imageUrl, int age, LocalDate birth, PositionInfo position, BatInfo batInfo,
-                      PitchInfo pitchInfo, Double height, Double weight, String highSchool,
-                      String university, int salary, int faRemaining, String backNumber) {
+                      PitchInfo pitchInfo, Double height, Double weight, String school,
+                      int salary, int faRemaining, String backNumber) {
         this.year = year;
         this.name = name;
         this.team = team;
@@ -85,8 +82,7 @@ public class PlayerDTO {
         this.pitchInfo = pitchInfo;
         this.height = height;
         this.weight = weight;
-        this.highSchool = highSchool;
-        this.university = university;
+        this.school = school;
         this.salary = salary;
         this.faRemaining = faRemaining;
         this.backNumber = backNumber;

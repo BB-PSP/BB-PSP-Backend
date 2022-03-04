@@ -24,7 +24,6 @@ public class PitcherStatController {
 
     private final PitcherStatService pitcherStatService;
 
-    // 1. 특정 년도의 투수 전체 기록 가져오기(페이징)
     @GetMapping
     @ApiOperation(value = "특정 년도의 전체 투수 기록 가져오기(페이징)", notes = "특정 년도의 전체 투수 기록(선수 정보 포함)을 페이징으로 가져오는 API")
     public ResponseEntity<List<PitcherStatNPlayerDTO>> findAllPitchersByYear(
@@ -37,7 +36,6 @@ public class PitcherStatController {
         return new ResponseEntity<>(pitcherStatService.findAllByYear(year, offset, limit), HttpStatus.OK);
     }
 
-    // 2. 특정 투수(이름을 포함하면 다 나옴)의 전체 기록 가져오기
     @GetMapping("/stat")
     @ApiOperation(value = "특정 투수의 전체 기록 가져오기", notes = "특정 투수의 전체 기록을 가져오는 API, 해당선수의 생년월일을 활용")
     public ResponseEntity<List<PitcherStatNPlayerDTO>> findAllOneBatter(
@@ -48,7 +46,6 @@ public class PitcherStatController {
         return new ResponseEntity<>(pitcherStatService.findAllWithOnePitcher(name, birth), HttpStatus.OK);
     }
 
-    // 3. 특정 투수의 특정 년도 기록 가져오기
     @GetMapping("/stat/{year}")
     @ApiOperation(value = "특정 년도의 특정 투수 기록 가져오기", notes = "특정 년도의 특정 투수 기록을 연도와 생년월일을 활용해 가져오는 API")
     public ResponseEntity<PitcherStatNPlayerDTO> findOne(
