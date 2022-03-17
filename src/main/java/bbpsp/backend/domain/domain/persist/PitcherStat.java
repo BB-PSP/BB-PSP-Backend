@@ -22,6 +22,12 @@ public class PitcherStat {
     @Column(name = "_G")
     private int G;
 
+    @Column(name = "_GS")
+    private int GS;
+
+    @Column(name = "_CG")
+    private int CG;
+
     @Column(name = "_SHO")
     private int SHO;
 
@@ -55,8 +61,17 @@ public class PitcherStat {
     @Column(name = "_BB")
     private int BB;
 
+    @Column(name = "_IBB")
+    private int IBB;
+
     @Column(name = "_HBP")
     private int HBP;
+
+    @Column(name = "_BK")
+    private int BK;
+
+    @Column(name = "_WP")
+    private int WP;
 
     @Column(name = "_SO")
     private int SO;
@@ -67,19 +82,51 @@ public class PitcherStat {
     @Column(name = "_ER")
     private int ER;
 
-    public static PitcherStat createPitcherStat(double ERA, int G, int SHO, int W,
-                                                int L, int SV, int HLD, double WPCT,
-                                                int TBF, double IP, int H, int HR, int BB, int HBP,
-                                                int SO, int R, int ER) {
+    @Column(name = "_K_9")
+    private double K_9;
+
+    @Column(name = "_BB_9")
+    private double BB_9;
+
+    @Column(name = "_K_BB")
+    private double K_BB;
+
+    @Column(name = "_H_9")
+    private double H_9;
+
+    @Column(name = "_HR_9")
+    private double HR_9;
+
+    @Column(name = "_LOB")
+    private double LOB;
+
+    @Column(name = "_FIP")
+    private double FIP;
+
+    @Column(name = "_BABIP")
+    private double BABIP;
+
+    @Column(name = "_WHIP")
+    private double WHIP;
+
+    public static PitcherStat createPitcherStat(double ERA, int G, int GS, int CG, int SHO, int W, int L, int SV, int HLD,
+                                                double WPCT, int TBF, double IP, int H, int HR, int BB,
+                                                int IBB, int HBP, int BK, int WP, int SO, int R,
+                                                int ER, double K_9, double BB_9, double K_BB, double H_9,
+                                                double HR_9, double LOB, double FIP, double BABIP, double WHIP) {
         return new PitcherStat(
-                ERA, G, SHO, W, L, SV, HLD, WPCT,
-                TBF, IP, H, HR, BB, HBP, SO, R, ER
+                ERA, G, GS, CG, SHO, W, L, SV, HLD,
+                WPCT, TBF, IP, H, HR, BB, IBB, HBP, BK, WP, SO, R,
+                ER, K_9, BB_9, K_BB, H_9,
+                HR_9, LOB, FIP, BABIP, WHIP
         );
     }
 
     public void changePitcherStat(PitcherStat pitcherStat) {
         this.ERA = pitcherStat.getERA();
         this.G = pitcherStat.getG();
+        this.GS = pitcherStat.getGS();
+        this.CG = pitcherStat.getCG();
         this.SHO = pitcherStat.getSHO();
         this.W = pitcherStat.getW();
         this.L = pitcherStat.getL();
@@ -91,18 +138,33 @@ public class PitcherStat {
         this.H = pitcherStat.getH();
         this.HR = pitcherStat.getHR();
         this.BB = pitcherStat.getBB();
+        this.IBB = pitcherStat.getIBB();
         this.HBP = pitcherStat.getHBP();
+        this.BK = pitcherStat.getBK();
+        this.WP = pitcherStat.getWP();
         this.SO = pitcherStat.getSO();
         this.R = pitcherStat.getR();
         this.ER = pitcherStat.getER();
+        this.K_9 = pitcherStat.getK_9();
+        this.BB_9 = pitcherStat.getBB_9();
+        this.K_BB = pitcherStat.getK_BB();
+        this.H_9 = pitcherStat.getH_9();
+        this.HR_9 = pitcherStat.getHR_9();
+        this.LOB = pitcherStat.getLOB();
+        this.FIP =pitcherStat.getFIP();
+        this.BABIP = pitcherStat.getBABIP();
+        this.WHIP = pitcherStat.getWHIP();
     }
 
-    private PitcherStat(double ERA, int G, int SHO, int W,
-                       int L, int SV, int HLD, double WPCT,
-                       int TBF, double IP, int H, int HR, int BB, int HBP,
-                       int SO, int R, int ER) {
+    public PitcherStat(double ERA, int G, int GS, int CG, int SHO, int W, int L, int SV, int HLD,
+                       double WPCT, int TBF, double IP, int H, int HR, int BB,
+                       int IBB, int HBP, int BK, int WP, int SO, int R,
+                       int ER, double K_9, double BB_9, double K_BB, double H_9,
+                       double HR_9, double LOB, double FIP, double BABIP, double WHIP) {
         this.ERA = ERA;
         this.G = G;
+        this.GS = GS;
+        this.CG = CG;
         this.SHO = SHO;
         this.W = W;
         this.L = L;
@@ -114,9 +176,21 @@ public class PitcherStat {
         this.H = H;
         this.HR = HR;
         this.BB = BB;
+        this.IBB = IBB;
         this.HBP = HBP;
+        this.BK = BK;
+        this.WP = WP;
         this.SO = SO;
         this.R = R;
         this.ER = ER;
+        this.K_9 = K_9;
+        this.BB_9 = BB_9;
+        this.K_BB = K_BB;
+        this.H_9 = H_9;
+        this.HR_9 = HR_9;
+        this.LOB = LOB;
+        this.FIP = FIP;
+        this.BABIP = BABIP;
+        this.WHIP = WHIP;
     }
 }

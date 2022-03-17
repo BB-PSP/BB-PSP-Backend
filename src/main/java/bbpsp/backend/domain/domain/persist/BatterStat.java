@@ -57,6 +57,9 @@ public class BatterStat {
     @Column(name = "_BB")
     private int BB;
 
+    @Column(name = "_IBB")
+    private int IBB;
+
     @Column(name = "_HBP")
     private int HBP;
 
@@ -75,14 +78,22 @@ public class BatterStat {
     @Column(name = "_E")
     private int E;
 
+    @Column(name = "_SH")
+    private int SH;
+
+    @Column(name = "_SF")
+    private int SF;
+
+
+
 
     public static BatterStat createBatterStat(int G, Double AVG, int PA, int AB, int R,
                                               int H, int _2B, int _3B, int HR, int TB,
-                                              int RBI, int SB, int CS, int BB, int HBP,
-                                              int SO, int GDP, Double SLG, Double OBP, int E) {
+                                              int RBI, int SB, int CS, int BB, int IBB, int HBP,
+                                              int SO, int GDP, Double SLG, Double OBP, int E, int SH, int SF) {
         return new BatterStat(
                 G, AVG, PA, AB, R, H, _2B, _3B, HR, TB,
-                RBI, SB, CS, BB, HBP, SO, GDP, SLG, OBP, E
+                RBI, SB, CS, BB, IBB, HBP, SO, GDP, SLG, OBP, E, SH, SF
         );
     }
 
@@ -101,18 +112,21 @@ public class BatterStat {
         this.SB = batterStat.getSB();
         this.CS = batterStat.getCS();
         this.BB = batterStat.getBB();
+        this.IBB = batterStat.getIBB();
         this.HBP = batterStat.getHBP();
         this.SO = batterStat.getSO();
         this.GDP = batterStat.getGDP();
         this.SLG = batterStat.getSLG();
         this.OBP = batterStat.getOBP();
         this.E = batterStat.getE();
+        this.SH = batterStat.getSH();
+        this.SF = batterStat.getSF();
     }
 
     private BatterStat(int G, Double AVG, int PA, int AB, int R,
                       int H, int _2B, int _3B, int HR, int TB,
-                      int RBI, int SB, int CS, int BB, int HBP,
-                      int SO, int GDP, Double SLG, Double OBP, int E) {
+                      int RBI, int SB, int CS, int BB, int IBB, int HBP,
+                      int SO, int GDP, Double SLG, Double OBP, int E, int SH, int SF) {
         this.G = G;
         this.AVG = AVG;
         this.PA = PA;
@@ -127,11 +141,14 @@ public class BatterStat {
         this.SB = SB;
         this.CS = CS;
         this.BB = BB;
+        this.IBB = IBB;
         this.HBP = HBP;
         this.SO = SO;
         this.GDP = GDP;
         this.SLG = SLG;
         this.OBP = OBP;
         this.E = E;
+        this.SF = SF;
+        this.SH = SH;
     }
 }
