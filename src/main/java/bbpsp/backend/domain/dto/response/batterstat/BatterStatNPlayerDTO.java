@@ -1,5 +1,6 @@
-package bbpsp.backend.domain.dto.response;
+package bbpsp.backend.domain.dto.response.batterstat;
 
+import bbpsp.backend.domain.dto.response.PlayerDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;

@@ -1,11 +1,17 @@
-package bbpsp.backend.domain.dto.response;
+package bbpsp.backend.domain.dto.response.pitcherstat;
 
 import bbpsp.backend.domain.domain.persist.PitcherStat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
 @Getter
-public class PitcherStatDTO {
+public class PitcherStatWithYearDTO {
+
+    @ApiModelProperty(value = "연도", required = true, example = "2017")
+    private int _YEAR;
+
+    @ApiModelProperty(value = "당시 소속 팀", required = true, example = "Wyverns")
+    private String _TEAM;
 
     @ApiModelProperty(value = "방어율", required = true, example = "3.25")
     private double _ERA;
@@ -100,8 +106,8 @@ public class PitcherStatDTO {
     @ApiModelProperty(value = "이닝 당 출루 허용", required = true, example = "1.34")
     private double _WHIP;
 
-    public static PitcherStatDTO createDTO(PitcherStat p) {
-        return new PitcherStatDTO(p.getERA(), p.getG(), p.getGS(), p.getCG(), p.getSHO(), p.getW(),
+    public static PitcherStatWithYearDTO createDTO(PitcherStat p, int year, String team) {
+        return new PitcherStatWithYearDTO(year, team, p.getERA(), p.getG(), p.getGS(), p.getCG(), p.getSHO(), p.getW(),
                 p.getL(), p.getSV(), p.getHLD(), p.getWPCT(),
                 p.getTBF(), p.getIP(), p.getH(), p.getHR(),
                 p.getBB(), p.getIBB(), p.getHBP(), p.getBK(), p.getWP(),
@@ -109,11 +115,13 @@ public class PitcherStatDTO {
                 p.getH_9(), p.getHR_9(), p.getLOB(), p.getFIP(), p.getBABIP(), p.getWHIP());
     }
 
-    private PitcherStatDTO(double ERA, int G, int GS, int CG, int SHO, int W, int L, int SV, int HLD,
+    private PitcherStatWithYearDTO(int YEAR, String TEAM, double ERA, int G, int GS, int CG, int SHO, int W, int L, int SV, int HLD,
                            double WPCT, int TBF, double IP, int H, int HR, int BB,
                            int IBB, int HBP, int BK, int WP, int SO, int R,
                            int ER, double K_9, double BB_9, double K_BB, double H_9,
                            double HR_9, double LOB, double FIP, double BABIP, double WHIP) {
+        this._YEAR = YEAR;
+        this._TEAM = TEAM;
         this._ERA = ERA;
         this._G = G;
         this._GS = GS;

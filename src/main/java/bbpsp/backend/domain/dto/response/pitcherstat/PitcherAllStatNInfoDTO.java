@@ -1,11 +1,14 @@
-package bbpsp.backend.domain.dto.response;
+package bbpsp.backend.domain.dto.response.pitcherstat;
 
+import bbpsp.backend.domain.dto.response.PlayerDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
 
 import java.util.List;
 
-public class PlayerInfoNPitcherAllStatDTO {
+@Getter
+public class PitcherAllStatNInfoDTO {
 
     @ApiModelProperty(value = "투수 성적 정보", required = true, example = "{...}")
     @JsonProperty(value = "pitcher_stat")
@@ -15,11 +18,11 @@ public class PlayerInfoNPitcherAllStatDTO {
     @JsonProperty(value = "player_info")
     private PlayerDTO playerDTO;
 
-    public static PlayerInfoNPitcherAllStatDTO createDTO(List<PitcherStatWithYearDTO> pitcherStatWithYearDTOList, PlayerDTO playerDTO) {
-        return new PlayerInfoNPitcherAllStatDTO(pitcherStatWithYearDTOList, playerDTO);
+    public static PitcherAllStatNInfoDTO createDTO(List<PitcherStatWithYearDTO> pitcherStatWithYearDTOList, PlayerDTO playerDTO) {
+        return new PitcherAllStatNInfoDTO(pitcherStatWithYearDTOList, playerDTO);
     }
 
-    private PlayerInfoNPitcherAllStatDTO(List<PitcherStatWithYearDTO> pitcherStatWithYearDTOList, PlayerDTO playerDTO) {
+    private PitcherAllStatNInfoDTO(List<PitcherStatWithYearDTO> pitcherStatWithYearDTOList, PlayerDTO playerDTO) {
         this.pitcherStatWithYearDTOList = pitcherStatWithYearDTOList;
         this.playerDTO = playerDTO;
     }

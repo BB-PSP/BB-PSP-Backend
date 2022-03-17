@@ -1,4 +1,4 @@
-package bbpsp.backend.domain.dto.response;
+package bbpsp.backend.domain.dto.response.batterstat;
 
 import bbpsp.backend.domain.domain.persist.BatterStat;
 import io.swagger.annotations.ApiModelProperty;
