@@ -4,8 +4,6 @@ import bbpsp.backend.domain.domain.persist.Team;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
-import javax.persistence.Column;
-
 @Getter
 public class TeamDTO {
 

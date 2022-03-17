@@ -1,7 +1,7 @@
 package bbpsp.backend.domain.controller;
 
-import bbpsp.backend.domain.domain.persist.BatterStat;
-import bbpsp.backend.domain.dto.response.BatterStatNPlayerDTO;
+import bbpsp.backend.domain.dto.response.batterstat.BatterAllStatNInfoDTO;
+import bbpsp.backend.domain.dto.response.batterstat.BatterStatNPlayerDTO;
 import bbpsp.backend.domain.service.BatterStatService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -49,10 +49,10 @@ public class BatterStatController {
     // 2. 특정 타자(이름을 포함하면 다 나옴)의 전체 기록 가져오기
     @GetMapping("/stat")
     @ApiOperation(value = "특정 타자의 전체 기록 가져오기", notes = "특정 타자의 전체 기록을 가져오는 API, 해당 선수의 unique_id를 활용")
-    public ResponseEntity<List<BatterStatNPlayerDTO>> findAllOneBatter(
-            @ApiParam(value = "선수 이름", required = true, example = "이승호")
+    public ResponseEntity<BatterAllStatNInfoDTO> findAllOneBatter(
+            @ApiParam(value = "선수 이름", required = true, example = "이대호")
             @RequestParam(value = "name") String name,
-            @ApiParam(value = "선수 생년월일", required = true, example = "1999-02-08")
+            @ApiParam(value = "선수 생년월일", required = true, example = "1982-06-21")
             @RequestParam(value = "birth") @DateTimeFormat(iso = DATE) LocalDate birth) {
         return new ResponseEntity<>(batterStatService.findAllWithOneBatter(name, birth), HttpStatus.OK);
     }
@@ -63,9 +63,9 @@ public class BatterStatController {
     public ResponseEntity<BatterStatNPlayerDTO> findOne(
             @ApiParam(value = "연도", required = true, example = "2021")
             @PathVariable(value = "year") int year,
-            @ApiParam(value = "선수 이름", required = true, example = "이승호")
+            @ApiParam(value = "선수 이름", required = true, example = "이대호")
             @RequestParam(value = "name") String name,
-            @ApiParam(value = "선수 생년월일", required = true, example = "1999-02-08")
+            @ApiParam(value = "선수 생년월일", required = true, example = "1982-06-21")
             @RequestParam(value = "birth") @DateTimeFormat(iso = DATE) LocalDate birth) {
         return new ResponseEntity<>(batterStatService.findOneByUniqueIdAndYear(year, name, birth), HttpStatus.OK);
     }

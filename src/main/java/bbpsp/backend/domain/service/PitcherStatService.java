@@ -1,16 +1,17 @@
 package bbpsp.backend.domain.service;
 
-import bbpsp.backend.domain.domain.persist.BatterStat;
 import bbpsp.backend.domain.domain.persist.PitcherStat;
 import bbpsp.backend.domain.domain.persist.Player;
 import bbpsp.backend.domain.domain.persist.Season;
 import bbpsp.backend.domain.dto.response.*;
+import bbpsp.backend.domain.dto.response.pitcherstat.PitcherStatDTO;
+import bbpsp.backend.domain.dto.response.pitcherstat.PitcherStatNPlayerDTO;
+import bbpsp.backend.domain.dto.response.pitcherstat.PitcherStatWithYearDTO;
+import bbpsp.backend.domain.dto.response.pitcherstat.PitcherAllStatNInfoDTO;
 import bbpsp.backend.domain.enums.PositionInfo;
-import bbpsp.backend.domain.execption.NoSuchBatterStatException;
 import bbpsp.backend.domain.execption.NoSuchPitcherStatException;
 import bbpsp.backend.domain.execption.NoSuchPlayerException;
 import bbpsp.backend.domain.execption.NoSuchSeasonException;
-import bbpsp.backend.domain.repository.BatterStatRepository;
 import bbpsp.backend.domain.repository.PitcherStatRepository;
 import bbpsp.backend.domain.repository.PlayerRepository;
 import bbpsp.backend.domain.repository.SeasonRepository;
@@ -52,20 +53,23 @@ public class PitcherStatService {
         return pitcherStatNPlayerDTOList;
     }
 
-    public List<PitcherStatNPlayerDTO> findAllWithOnePitcher(String name, LocalDate birth) {
-        List<PitcherStatNPlayerDTO> pitcherStatNPlayerDTOList = new ArrayList<>();
+    public PitcherAllStatNInfoDTO findAllWithOnePitcher(String name, LocalDate birth) {
+        List<PitcherStatWithYearDTO> pitcherStatWithYearDTOList = new ArrayList<>();
+        List<PlayerDTO> playerDTOList = new ArrayList<>();
         playerRepository.findByNameAndBirth(name, birth)
                 .stream()
                 .filter(p -> p.getPosition().equals(PositionInfo.PITCHER))
                 .forEach(p -> {
+                    if (p.getTeam().getSeason().getYear() == 2021) {
+                        playerDTOList.add(PlayerDTO.createPlayerDTO(p));
+                    }
                     PitcherStat pitcherStat = pitcherStatRepository.findById(p.getPitcherStat().getId())
                             .orElseThrow(() -> new NoSuchPitcherStatException(ErrorCode.NO_SUCH_PITCHER_STAT));
-                    PitcherStatDTO pitcherStatDTO = PitcherStatDTO.createDTO(pitcherStat);
-                    PlayerDTO playerDTO = PlayerDTO.createPlayerDTO(p);
+                    PitcherStatWithYearDTO pitcherStatWithYearDTO = PitcherStatWithYearDTO.createDTO(pitcherStat, p.getTeam().getSeason().getYear(), p.getTeam().getName());
 
-                    pitcherStatNPlayerDTOList.add(PitcherStatNPlayerDTO.createDTO(pitcherStatDTO, playerDTO));
+                    pitcherStatWithYearDTOList.add(pitcherStatWithYearDTO);
                 });
-        return pitcherStatNPlayerDTOList;
+        return PitcherAllStatNInfoDTO.createDTO(pitcherStatWithYearDTOList, playerDTOList.get(0));
     }
 
     public PitcherStatNPlayerDTO findOneByBirthAndName(int year, String name, LocalDate birth) {

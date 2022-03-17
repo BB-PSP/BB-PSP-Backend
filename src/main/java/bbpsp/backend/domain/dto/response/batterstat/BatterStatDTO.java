@@ -1,4 +1,4 @@
-package bbpsp.backend.domain.dto.response;
+package bbpsp.backend.domain.dto.response.batterstat;
 
 import bbpsp.backend.domain.domain.persist.BatterStat;
 import io.swagger.annotations.ApiModelProperty;
@@ -50,6 +50,9 @@ public class BatterStatDTO {
     @ApiModelProperty(value = "4구", required = true, example = "76")
     private int _BB;
 
+    @ApiModelProperty(value = "고의4구", required = true, example = "3")
+    private int _IBB;
+
     @ApiModelProperty(value = "사구", required = true, example = "4")
     private int _HBP;
 
@@ -68,19 +71,27 @@ public class BatterStatDTO {
     @ApiModelProperty(value = "에러", required = true, example = "3")
     private int _E;
 
+    @ApiModelProperty(value = "희생타", required = true, example = "3")
+    private int _SH;
+
+    @ApiModelProperty(value = "희생 플라이", required = true, example = "3")
+    private int _SF;
+
+
+
     public static BatterStatDTO createBatterStatDTO(BatterStat b) {
         return new BatterStatDTO(
                 b.getG(), b.getAVG(), b.getPA(), b.getAB(), b.getR(),
                 b.getH(), b.get_2B(), b.get_3B(), b.getHR(), b.getTB(),
-                b.getRBI(), b.getSB(), b.getCS(), b.getBB(), b.getHBP(),
-                b.getSO(), b.getGDP(), b.getSLG(), b.getOBP(), b.getE()
+                b.getRBI(), b.getSB(), b.getCS(), b.getBB(), b.getIBB(), b.getHBP(),
+                b.getSO(), b.getGDP(), b.getSLG(), b.getOBP(), b.getE(), b.getSH(), b.getSF()
         );
     }
 
     private BatterStatDTO(int G, Double AVG, int PA, int AB, int R,
                          int H, int _2B, int _3B, int HR,
-                         int TB, int RBI, int SB, int CS, int BB, int HBP,
-                         int SO, int GDP, Double SLG, Double OBP, int E) {
+                         int TB, int RBI, int SB, int CS, int BB, int IBB, int HBP,
+                         int SO, int GDP, Double SLG, Double OBP, int E, int SH, int SF) {
         this._G = G;
         this._AVG = AVG;
         this._PA = PA;
@@ -95,11 +106,14 @@ public class BatterStatDTO {
         this._SB = SB;
         this._CS = CS;
         this._BB = BB;
+        this._IBB = IBB;
         this._HBP = HBP;
         this._SO = SO;
         this._GDP = GDP;
         this._SLG = SLG;
         this._OBP = OBP;
         this._E = E;
+        this._SF = SF;
+        this._SH = SH;
     }
 }

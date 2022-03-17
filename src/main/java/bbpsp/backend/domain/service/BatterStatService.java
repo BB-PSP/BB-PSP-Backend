@@ -2,9 +2,11 @@ package bbpsp.backend.domain.service;
 
 import bbpsp.backend.domain.domain.persist.BatterStat;
 import bbpsp.backend.domain.domain.persist.Player;
-import bbpsp.backend.domain.dto.response.BatterStatDTO;
-import bbpsp.backend.domain.dto.response.BatterStatNPlayerDTO;
+import bbpsp.backend.domain.dto.response.batterstat.BatterAllStatNInfoDTO;
+import bbpsp.backend.domain.dto.response.batterstat.BatterStatDTO;
+import bbpsp.backend.domain.dto.response.batterstat.BatterStatNPlayerDTO;
 import bbpsp.backend.domain.dto.response.PlayerDTO;
+import bbpsp.backend.domain.dto.response.batterstat.BatterStatWithYearDTO;
 import bbpsp.backend.domain.enums.PositionInfo;
 import bbpsp.backend.domain.execption.NoSuchBatterStatException;
 import bbpsp.backend.domain.execption.NoSuchPlayerException;
@@ -50,19 +52,21 @@ public class BatterStatService {
         return list;
     }
 
-    public List<BatterStatNPlayerDTO> findAllWithOneBatter(String name, LocalDate birth) {
-        List<BatterStatNPlayerDTO> batterStatNPlayerDTOList = new ArrayList<>();
+    public BatterAllStatNInfoDTO findAllWithOneBatter(String name, LocalDate birth) {
+        List<BatterStatWithYearDTO> batterStatWithYearDTOList = new ArrayList<>();
+        List<PlayerDTO> playerDTOList = new ArrayList<>();
         playerRepository.findByNameAndBirth(name, birth)
                 .stream()
                 .filter(p -> p.getPosition().equals(PositionInfo.BATTER))
                 .forEach(p -> {
+                    if (p.getTeam().getSeason().getYear() == 2021) {
+                        playerDTOList.add(PlayerDTO.createPlayerDTO(p));
+                    }
                     BatterStat batterStat = batterStatRepository.findById(p.getBatterStat().getId())
                             .orElseThrow(() -> new NoSuchBatterStatException(ErrorCode.NO_SUCH_BATTER_STAT));
-                    BatterStatDTO batterStatDTO = BatterStatDTO.createBatterStatDTO(batterStat);
-                    PlayerDTO playerDTO = PlayerDTO.createPlayerDTO(p);
-                    batterStatNPlayerDTOList.add(BatterStatNPlayerDTO.createDTO(batterStatDTO, playerDTO));
+                    batterStatWithYearDTOList.add(BatterStatWithYearDTO.createBatterStatDTO(batterStat, p.getTeam().getSeason().getYear(), p.getTeam().getName()));
                 });
-        return batterStatNPlayerDTOList;
+        return BatterAllStatNInfoDTO.createDTO(batterStatWithYearDTOList, playerDTOList.get(0));
     }
 
 
