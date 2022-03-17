@@ -52,20 +52,21 @@ public class PitcherStatService {
         return pitcherStatNPlayerDTOList;
     }
 
-    public List<PitcherStatNPlayerDTO> findAllWithOnePitcher(String name, LocalDate birth) {
-        List<PitcherStatNPlayerDTO> pitcherStatNPlayerDTOList = new ArrayList<>();
+    public PlayerInfoNPitcherAllStatDTO findAllWithOnePitcher(String name, LocalDate birth) {
+        List<PitcherStatWithYearDTO> pitcherStatWithYearDTOList = new ArrayList<>();
+        List<PlayerDTO> playerDTOList = new ArrayList<>();
         playerRepository.findByNameAndBirth(name, birth)
                 .stream()
                 .filter(p -> p.getPosition().equals(PositionInfo.PITCHER))
                 .forEach(p -> {
+                    if (p.getTeam().getSeason().getYear() == 2021) playerDTOList.add(PlayerDTO.createPlayerDTO(p));
                     PitcherStat pitcherStat = pitcherStatRepository.findById(p.getPitcherStat().getId())
                             .orElseThrow(() -> new NoSuchPitcherStatException(ErrorCode.NO_SUCH_PITCHER_STAT));
-                    PitcherStatDTO pitcherStatDTO = PitcherStatDTO.createDTO(pitcherStat);
-                    PlayerDTO playerDTO = PlayerDTO.createPlayerDTO(p);
+                    PitcherStatWithYearDTO pitcherStatWithYearDTO = PitcherStatWithYearDTO.createDTO(pitcherStat, p.getTeam().getSeason().getYear(), p.getTeam().getName());
 
-                    pitcherStatNPlayerDTOList.add(PitcherStatNPlayerDTO.createDTO(pitcherStatDTO, playerDTO));
+                    pitcherStatWithYearDTOList.add(pitcherStatWithYearDTO);
                 });
-        return pitcherStatNPlayerDTOList;
+        return PlayerInfoNPitcherAllStatDTO.createDTO(pitcherStatWithYearDTOList, playerDTOList.get(0));
     }
 
     public PitcherStatNPlayerDTO findOneByBirthAndName(int year, String name, LocalDate birth) {
