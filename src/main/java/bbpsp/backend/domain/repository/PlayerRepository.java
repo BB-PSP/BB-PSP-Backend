@@ -38,6 +38,7 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
     @Query("SELECT p FROM Player p" +
             " LEFT JOIN FETCH p.batterStat b" +
             " LEFT JOIN FETCH p.team t" +
+            " LEFT JOIN FETCH t.season s" +
             " WHERE p.name =:name AND p.birth =:birth")
     List<Player> findByNameAndBirth(@Param("name") String name, @Param("birth") LocalDate birth);
 

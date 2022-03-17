@@ -1,7 +1,7 @@
 package bbpsp.backend.domain.controller;
 
-import bbpsp.backend.domain.dto.response.PitcherStatNPlayerDTO;
-import bbpsp.backend.domain.dto.response.PlayerInfoNPitcherAllStatDTO;
+import bbpsp.backend.domain.dto.response.pitcherstat.PitcherStatNPlayerDTO;
+import bbpsp.backend.domain.dto.response.pitcherstat.PitcherAllStatNInfoDTO;
 import bbpsp.backend.domain.service.PitcherStatService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,7 +39,7 @@ public class PitcherStatController {
 
     @GetMapping("/stat")
     @ApiOperation(value = "특정 투수의 전체 기록 가져오기", notes = "특정 투수의 전체 기록을 가져오는 API, 해당선수의 생년월일을 활용")
-    public ResponseEntity<PlayerInfoNPitcherAllStatDTO> findAllOneBatter(
+    public ResponseEntity<PitcherAllStatNInfoDTO> findAllOneBatter(
             @ApiParam(value = "선수 이름", required = true, example = "류현진")
             @RequestParam(value = "name") String name,
             @ApiParam(value = "선수 생년월일", required = true, example = "1999-02-08")
