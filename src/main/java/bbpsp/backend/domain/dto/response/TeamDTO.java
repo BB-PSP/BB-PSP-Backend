@@ -7,7 +7,10 @@ import lombok.Getter;
 @Getter
 public class TeamDTO {
 
-    @ApiModelProperty(value = "팀 명(영문)", required = true, example = "Hanwha Eagles")
+    @ApiModelProperty(value = "팀 모기업 명", required = true, example = "Hanwha")
+    private final String company;
+
+    @ApiModelProperty(value = "팀 명(영문)", required = true, example = "Eagles")
     private final String name;
 
     @ApiModelProperty(value = "연고지", required = true, example = "대전")
@@ -50,15 +53,16 @@ public class TeamDTO {
     private String linearGradient;
 
     public static TeamDTO createTeamDTO(Team team) {
-        return new TeamDTO(team.getName(), team.getHometown(), team.getColourLogo(), team.getBlackLogo(),
+        return new TeamDTO(team.getCompany(), team.getName(), team.getHometown(), team.getColourLogo(), team.getBlackLogo(),
                 team.getHeadCoach(), team.getHomepageUrl(), team.getFoundedAt(),
                 team.getTeamColour(), team.getChampCount(), team.getWinCount(),
                 team.getDrawCount(), team.getDefeatCount(), team.getPlace(), team.getLinearGradient());
     }
 
-    private TeamDTO(String name, String hometown, String colourLogo, String blackLogo,
+    private TeamDTO(String company, String name, String hometown, String colourLogo, String blackLogo,
                    String headCoach, String homepageUrl, int foundedAt, String teamColour,
                    int champCount, int winCount, int drawCount, int defeatCount, int place, String linearGradient) {
+        this.company = company;
         this.name = name;
         this.hometown = hometown;
         this.colourLogo = colourLogo;
