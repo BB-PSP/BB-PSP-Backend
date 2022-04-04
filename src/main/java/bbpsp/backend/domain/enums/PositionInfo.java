@@ -1,5 +1,5 @@
 package bbpsp.backend.domain.enums;
 
 public enum PositionInfo {
-    PITCHER, BATTER
+    P, C, _1B, _2B, _3B, SS, IF, OF
 }

@@ -33,6 +33,9 @@ public class BatterStat {
     @Column(name = "_H")
     private int H;
 
+    @Column(name = "_1B")
+    private int _1B;
+
     @Column(name = "_2B")
     private int _2B;
 
@@ -88,11 +91,11 @@ public class BatterStat {
 
 
     public static BatterStat createBatterStat(int G, Double AVG, int PA, int AB, int R,
-                                              int H, int _2B, int _3B, int HR, int TB,
+                                              int H, int _1B, int _2B, int _3B, int HR, int TB,
                                               int RBI, int SB, int CS, int BB, int IBB, int HBP,
                                               int SO, int GDP, Double SLG, Double OBP, int E, int SH, int SF) {
         return new BatterStat(
-                G, AVG, PA, AB, R, H, _2B, _3B, HR, TB,
+                G, AVG, PA, AB, R, H, _1B, _2B, _3B, HR, TB,
                 RBI, SB, CS, BB, IBB, HBP, SO, GDP, SLG, OBP, E, SH, SF
         );
     }
@@ -104,6 +107,7 @@ public class BatterStat {
         this.AB = batterStat.getAB();
         this.R = batterStat.getR();
         this.H = batterStat.getH();
+        this._1B = batterStat.get_1B();
         this._2B = batterStat.get_2B();
         this._3B = batterStat.get_3B();
         this.HR = batterStat.getHR();
@@ -124,7 +128,7 @@ public class BatterStat {
     }
 
     private BatterStat(int G, Double AVG, int PA, int AB, int R,
-                      int H, int _2B, int _3B, int HR, int TB,
+                      int H, int _1B, int _2B, int _3B, int HR, int TB,
                       int RBI, int SB, int CS, int BB, int IBB, int HBP,
                       int SO, int GDP, Double SLG, Double OBP, int E, int SH, int SF) {
         this.G = G;
@@ -133,6 +137,7 @@ public class BatterStat {
         this.AB = AB;
         this.R = R;
         this.H = H;
+        this._1B = _1B;
         this._2B = _2B;
         this._3B = _3B;
         this.HR = HR;

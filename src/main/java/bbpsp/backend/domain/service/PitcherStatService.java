@@ -41,7 +41,7 @@ public class PitcherStatService {
         List<PitcherStatNPlayerDTO> pitcherStatNPlayerDTOList = new ArrayList<>();
         playerRepository.findPlayerByYear(season.getId(), pageRequest)
                 .stream()
-                .filter(p -> p.getPosition().equals(PositionInfo.PITCHER))
+                .filter(p -> p.getPosition().equals(PositionInfo.P))
                 .forEach(p -> {
                     PitcherStat pitcherStat = pitcherStatRepository.findById(p.getPitcherStat().getId())
                             .orElseThrow(() -> new NoSuchPitcherStatException(ErrorCode.NO_SUCH_PITCHER_STAT));
@@ -58,7 +58,7 @@ public class PitcherStatService {
         List<PlayerDTO> playerDTOList = new ArrayList<>();
         playerRepository.findByNameAndBirth(name, birth)
                 .stream()
-                .filter(p -> p.getPosition().equals(PositionInfo.PITCHER))
+                .filter(p -> p.getPosition().equals(PositionInfo.P))
                 .forEach(p -> {
                     if (p.getTeam().getSeason().getYear() == 2021) {
                         playerDTOList.add(PlayerDTO.createPlayerDTO(p));
@@ -77,7 +77,7 @@ public class PitcherStatService {
                 .orElseThrow(() -> new NoSuchSeasonException(ErrorCode.NO_SUCH_SEASON));
         Player player = playerRepository.findByNameAndBirth(name, birth)
                 .stream()
-                .filter(p -> p.getTeam().getSeason().getId().equals(season.getId()) && p.getPosition().equals(PositionInfo.PITCHER))
+                .filter(p -> p.getTeam().getSeason().getId().equals(season.getId()) && p.getPosition().equals(PositionInfo.P))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchPlayerException(ErrorCode.NO_SUCH_PLAYER));
         PitcherStat pitcherStat = pitcherStatRepository.findById(player.getPitcherStat().getId())

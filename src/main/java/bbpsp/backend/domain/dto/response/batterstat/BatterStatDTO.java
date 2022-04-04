@@ -26,6 +26,9 @@ public class BatterStatDTO {
     @ApiModelProperty(value = "안타", required = true, example = "176")
     private int _H;
 
+    @ApiModelProperty(value = "1루타", required = true, example = "102")
+    private int _1B;
+
     @ApiModelProperty(value = "2루타", required = true, example = "24")
     private int _2B;
 
@@ -82,14 +85,14 @@ public class BatterStatDTO {
     public static BatterStatDTO createBatterStatDTO(BatterStat b) {
         return new BatterStatDTO(
                 b.getG(), b.getAVG(), b.getPA(), b.getAB(), b.getR(),
-                b.getH(), b.get_2B(), b.get_3B(), b.getHR(), b.getTB(),
+                b.getH(), b.get_1B(), b.get_2B(), b.get_3B(), b.getHR(), b.getTB(),
                 b.getRBI(), b.getSB(), b.getCS(), b.getBB(), b.getIBB(), b.getHBP(),
                 b.getSO(), b.getGDP(), b.getSLG(), b.getOBP(), b.getE(), b.getSH(), b.getSF()
         );
     }
 
     private BatterStatDTO(int G, Double AVG, int PA, int AB, int R,
-                         int H, int _2B, int _3B, int HR,
+                         int H, int _1B, int _2B, int _3B, int HR,
                          int TB, int RBI, int SB, int CS, int BB, int IBB, int HBP,
                          int SO, int GDP, Double SLG, Double OBP, int E, int SH, int SF) {
         this._G = G;
@@ -98,6 +101,7 @@ public class BatterStatDTO {
         this._AB = AB;
         this._R = R;
         this._H = H;
+        this._1B = _1B;
         this._2B = _2B;
         this._3B = _3B;
         this._HR = HR;
