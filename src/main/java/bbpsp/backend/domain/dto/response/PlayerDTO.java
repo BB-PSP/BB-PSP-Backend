@@ -32,7 +32,7 @@ public class PlayerDTO {
     @ApiModelProperty(value = "출생", required = true, example = "1993-01-01")
     private LocalDate birth;
 
-    @ApiModelProperty(value = "투수/타자(야수) 여부", required = true, example = "PITCHER, BATTER")
+    @ApiModelProperty(value = "투수/타자(야수) 여부", required = true, example = "P, C, _1B, _2B, _3B, OF, SS, IF")
     @Enumerated(EnumType.STRING)
     private PositionInfo position;
 
