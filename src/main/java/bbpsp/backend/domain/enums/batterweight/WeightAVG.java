@@ -1,7 +1,8 @@
 package bbpsp.backend.domain.enums.batterweight;
 
-public enum AvgWeight {
-    AGE(1.14001536e-06),
+public enum WeightAVG {
+
+    Age(1.14001536e-06),
     OBP(4.27877646e-01),
     SLG(1.40510622e-01),
     G(9.11344342e-05),
@@ -26,7 +27,7 @@ public enum AvgWeight {
 
     private final double value;
 
-    AvgWeight(double value) {
+    WeightAVG(double value) {
         this.value = value;
     }
 
