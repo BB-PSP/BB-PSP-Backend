@@ -15,6 +15,9 @@ public class Team {
     @Column(name = "team_id")
     private Long id;
 
+    @Column(name = "team_company")
+    private String company;
+
     @Column(name = "team_name")
     private String name;
 
@@ -64,15 +67,16 @@ public class Team {
 //    @OneToMany(mappedBy = "team")
 //    private List<Active> activeList = new ArrayList<>();
 
-    public static Team createTeam(Season season, String name, String hometown, String colourLogo, String blackLogo, String headCoach,
+    public static Team createTeam(Season season, String company, String name, String hometown, String colourLogo, String blackLogo, String headCoach,
                                   String homepageUrl, int foundedAt, String teamColour, int champCount, int place,
                                   int winCount, int drawCount, int defeatCount, String linearGradient) {
-        return new Team(season, name, hometown, colourLogo, blackLogo, headCoach, homepageUrl,
+        return new Team(season, company, name, hometown, colourLogo, blackLogo, headCoach, homepageUrl,
                 foundedAt, teamColour, champCount, place,
                 winCount, drawCount, defeatCount, linearGradient);
     }
 
     public void changeTeam(Team team) {
+        this.company = team.getCompany();
         this.name = team.getName();
         this.hometown = team.getHometown();
         this.colourLogo = team.getColourLogo();
@@ -90,10 +94,11 @@ public class Team {
         this.season = team.getSeason();
     }
 
-    private Team(Season season, String name, String hometown, String colourLogo, String blackLogo, String headCoach,
+    private Team(Season season, String company, String name, String hometown, String colourLogo, String blackLogo, String headCoach,
                 String homepageUrl, int foundedAt, String teamColour, int champCount, int place,
                 int winCount, int drawCount, int defeatCount, String linearGradient) {
         this.season = season;
+        this.company = company;
         this.name = name;
         this.hometown = hometown;
         this.colourLogo = colourLogo;
