@@ -25,11 +25,12 @@ public enum ErrorCode {
     NO_SUCH_BATTER_STAT(404, "BS001", "해당 선수의 타자 기록이 존재하지 않습니다."),
 
     // PitcherStat
-    NO_SUCH_PITCHER_STAT(404, "PS001", "해당 선수의 타자 기록이 존재하지 않습니다.")
+    NO_SUCH_PITCHER_STAT(404, "PS001", "해당 선수의 타자 기록이 존재하지 않습니다."),
 
+    // Prediction
+    MUST_NOT_EXIST_PITCHER(403, "PR001", "투수는 선택되어서는 안됩니다. 야수만 선택하시기 바랍니다."),
+    MUST_NOT_EXIST_FIELDER(403, "PR002", "야수는 선택되어서는 안됩니다. 투수만 선택하시기 바랍니다.")
     ;
-
-    // Mate domain
 
     private final String code;
     private final String message;
