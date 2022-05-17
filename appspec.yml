@@ -1,0 +1,18 @@
+version: 0.0
+os: ubuntu
+files:
+  - source:  /
+    destination: /home/ubuntu/jenkins  # EC2 내부 배포 할 위치
+    overwrite: yes
+
+permissions:
+  - object: /
+    pattern: "**"
+    owner: ubuntu
+    group: ubuntu
+
+hooks:
+  ApplicationStart:
+    - location: scripts/deploy.sh    # ApplicationStart 단계에서 해당 파일을 실행해라
+      timeout: 60
+      runas: ubuntu
