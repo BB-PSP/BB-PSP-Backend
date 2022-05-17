@@ -22,6 +22,17 @@ public class PlayerInfoDTO {
     @ApiModelProperty(value = "이름", required = true, example = "144")
     private int age;
 
-    @ApiModelProperty(value = "이름", required = true, example = "144")
+    @ApiModelProperty(value = "포지션 정보", required = true, example = "P")
     private PositionInfo positionInfo;
+
+    public static PlayerInfoDTO createDTO(String name, LocalDate birth, int age, PositionInfo positionInfo) {
+        return new PlayerInfoDTO(name, birth, age, positionInfo);
+    }
+
+    private PlayerInfoDTO(String name, LocalDate birth, int age, PositionInfo positionInfo) {
+        this.name = name;
+        this.birth = birth;
+        this.age = age;
+        this.positionInfo = positionInfo;
+    }
 }

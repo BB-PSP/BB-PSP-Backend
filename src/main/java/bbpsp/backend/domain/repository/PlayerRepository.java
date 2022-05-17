@@ -52,4 +52,11 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
             " LEFT JOIN FETCH t.season s" +
             " WHERE t.id =:teamId")
     List<Player> findAllByTeamId(@Param("teamId")Long teamId);
+
+    @Query("SELECT p FROM Player p" +
+            " LEFT JOIN FETCH p.team t" +
+            " LEFT JOIN FETCH t.season s" +
+            " WHERE s.year=:year" +
+            " AND p.age>=:ageStart AND p.age<=:ageEnd")
+    List<Player> findByAgeWithTeam(@Param("ageStart")int ageStart, @Param("ageEnd")int ageEnd, @Param("year")int year);
 }
