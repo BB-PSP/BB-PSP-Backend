@@ -1,8 +1,8 @@
 version: 0.0
-os: ubuntu
+os: linux
 files:
   - source:  /
-    destination: /home/ubuntu/travis-ci  # EC2 내부 배포 할 위치
+    destination: /home/ubuntu/travis-ci/zip/  # EC2 내부 배포 할 위치
     overwrite: yes
 
 #permissions:
