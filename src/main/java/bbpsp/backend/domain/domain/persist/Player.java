@@ -107,6 +107,7 @@ public class Player extends BaseTimeEntity {
         this.birth = player.getBirth();
         this.batInfo = player.getBatInfo();
         this.pitchInfo = player.getPitchInfo();
+        this.position = player.getPosition();
         this.height = player.getHeight();
         this.weight = player.getWeight();
         this.school = player.getSchool();
