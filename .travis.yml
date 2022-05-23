@@ -29,8 +29,8 @@ deploy:
     acl: private                # zip 파일 접근을 private 으로
     local_dir: deploy           # before_deploy 에서 생성한 디렉토리
     wait-until-deployed: true
-#    on:
-#      all_branches: true
+    on:
+      all_branches: true
 
   - provider: codedeploy
     access_key_id: $AWS_ACCESS_KEY
@@ -42,6 +42,8 @@ deploy:
     deployment_group: code-deploy-bbpsp-group
     region: us-east-2
     wait-until-deployed: true
+    on:
+      all_branches: true
 
 # CI 실행 완료 시 메일로 알람
 notifications:
