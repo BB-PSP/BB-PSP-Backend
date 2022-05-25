@@ -1,20 +1,18 @@
 package bbpsp.backend.domain.service;
 
-import bbpsp.backend.domain.domain.persist.PitcherStat;
-import bbpsp.backend.domain.domain.persist.Player;
-import bbpsp.backend.domain.domain.persist.Season;
+import bbpsp.backend.domain.domain.persist.*;
+import bbpsp.backend.domain.dto.request.PlayerRangeDTO;
 import bbpsp.backend.domain.dto.response.*;
 import bbpsp.backend.domain.dto.response.pitcherstat.PitcherStatDTO;
 import bbpsp.backend.domain.dto.response.pitcherstat.PitcherStatNPlayerDTO;
 import bbpsp.backend.domain.dto.response.pitcherstat.PitcherStatWithYearDTO;
 import bbpsp.backend.domain.dto.response.pitcherstat.PitcherAllStatNInfoDTO;
 import bbpsp.backend.domain.enums.PositionInfo;
-import bbpsp.backend.domain.execption.NoSuchPitcherStatException;
-import bbpsp.backend.domain.execption.NoSuchPlayerException;
-import bbpsp.backend.domain.execption.NoSuchSeasonException;
+import bbpsp.backend.domain.execption.*;
 import bbpsp.backend.domain.repository.PitcherStatRepository;
 import bbpsp.backend.domain.repository.PlayerRepository;
 import bbpsp.backend.domain.repository.SeasonRepository;
+import bbpsp.backend.domain.repository.TeamRepository;
 import bbpsp.backend.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -32,6 +30,7 @@ public class PitcherStatService {
     private final PitcherStatRepository pitcherStatRepository;
     private final PlayerRepository playerRepository;
     private final SeasonRepository seasonRepository;
+    private final TeamRepository teamRepository;
 
     public List<PitcherStatNPlayerDTO> findAllByYear(int year, int offset, int limit) {
         Season season = seasonRepository.findByYear(year)
@@ -86,5 +85,41 @@ public class PitcherStatService {
         PlayerDTO playerDTO = PlayerDTO.createPlayerDTO(player);
         PitcherStatDTO pitcherStatDTO = PitcherStatDTO.createDTO(pitcherStat);
         return PitcherStatNPlayerDTO.createDTO(pitcherStatDTO, playerDTO);
+    }
+
+    public List<PitcherStatNPlayerDTO> findAllByTeam(int year, String symbol) {
+        Team team = teamRepository.findOneByYearAndSymbol(year, symbol)
+                .orElseThrow(() -> new NoSuchTeamException(ErrorCode.NO_SUCH_TEAM));
+        List<PitcherStatNPlayerDTO> pitcherStatNPlayerDTOList = new ArrayList<>();
+        playerRepository.findAllByTeamId(team.getId())
+                .stream()
+                .filter(player -> player.getPosition().equals(PositionInfo.P))
+                .forEach(player -> {
+                    PitcherStat pitcherStat = pitcherStatRepository.findById(player.getPitcherStat().getId())
+                            .orElseThrow(() -> new NoSuchPitcherStatException(ErrorCode.NO_SUCH_PITCHER_STAT));
+                    PitcherStatDTO pitcherStatDTO = PitcherStatDTO.createDTO(pitcherStat);
+                    PlayerDTO playerDTO = PlayerDTO.createPlayerDTO(player);
+                    pitcherStatNPlayerDTOList.add(PitcherStatNPlayerDTO.createDTO(pitcherStatDTO, playerDTO));
+                });
+        return pitcherStatNPlayerDTOList;
+    }
+
+    public List<PitcherStatNPlayerDTO> findRightPitcher(PlayerRangeDTO playerRangeDTO, int year) {
+        if (!playerRangeDTO.getPositionList().contains(PositionInfo.P)) {
+            throw new IllegalPositionSelectException(ErrorCode.MUST_NOT_EXIST_FIELDER);
+        }
+        List<PitcherStatNPlayerDTO> pitcherStatNPlayerDTOList = new ArrayList<>();
+        playerRepository.findPitchersByAgeWithTeam(playerRangeDTO.getAgeStart(), playerRangeDTO.getAgeEnd(), year)
+                .stream()
+                .filter(player -> playerRangeDTO.getTeamList().contains(player.getTeam().getName()))
+                .filter(player -> playerRangeDTO.getPositionList().contains(player.getPosition()))
+                .forEach(player -> {
+                    PitcherStat pitcherStat = pitcherStatRepository.findById(player.getPitcherStat().getId())
+                            .orElseThrow(() -> new NoSuchPitcherStatException(ErrorCode.NO_SUCH_PITCHER_STAT));
+                    PitcherStatDTO pitcherStatDTO = PitcherStatDTO.createDTO(pitcherStat);
+                    PlayerDTO playerDTO = PlayerDTO.createPlayerDTO(player);
+                    pitcherStatNPlayerDTOList.add(PitcherStatNPlayerDTO.createDTO(pitcherStatDTO, playerDTO));
+                });
+        return pitcherStatNPlayerDTOList;
     }
 }

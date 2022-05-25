@@ -1,7 +1,10 @@
 package bbpsp.backend.domain.controller;
 
+import bbpsp.backend.domain.dto.request.PlayerRangeDTO;
+import bbpsp.backend.domain.dto.response.batterstat.BatterStatNPlayerDTO;
 import bbpsp.backend.domain.dto.response.pitcherstat.PitcherStatNPlayerDTO;
 import bbpsp.backend.domain.dto.response.pitcherstat.PitcherAllStatNInfoDTO;
+import bbpsp.backend.domain.enums.PositionInfo;
 import bbpsp.backend.domain.service.PitcherStatService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -57,6 +61,36 @@ public class PitcherStatController {
             @ApiParam(value = "선수 생년월일", required = true, example = "1999-02-08")
             @RequestParam(value = "birth") @DateTimeFormat(iso = DATE) LocalDate birth) {
         return new ResponseEntity<>(pitcherStatService.findOneByBirthAndName(year, name, birth), HttpStatus.OK);
+    }
+
+    // 4. 특정 팀의 특정 년도 전체 투수 기록 가져오기
+    @GetMapping("/stat/{year}/{symbol}")
+    @ApiOperation(value = "특정 팀의 특정 년도 전체 투수 기록 가져오기", notes = "특정 팀의 특정 년도 전체 투수 기록을 가져오는 API")
+    public ResponseEntity<List<PitcherStatNPlayerDTO>> findTeamPlayersRecord(
+            @ApiParam(value = "연도", required = true, example = "2021")
+            @PathVariable(value = "year") int year,
+            @ApiParam(value = "팀 상징", required = true, example = "Eagles")
+            @PathVariable(value = "symbol") String symbol
+    ) {
+        return new ResponseEntity<>(pitcherStatService.findAllByTeam(year, symbol), HttpStatus.OK);
+    }
+
+    // 5. 특정 년도의 RequestBody로 넘어온 조건의 투수들 기록 가져오기
+    @GetMapping("/stat/range/{year}")
+    @ApiOperation(value = "특정 년도의 RequestBody로 넘어온 조건의 투수들 기록 가져오기", notes = "json으로 넘어온 투수들 기록을 가져오는 API")
+    public ResponseEntity<List<PitcherStatNPlayerDTO>> pitcherRange(
+            @ApiParam(value = "연도", required = true, example = "2021")
+            @PathVariable("year") int year,
+            @ApiParam(value = "나이 범위 시작", required = true, example = "20,30")
+            @RequestParam(value = "age_range") int[] ageRange,
+            @ApiParam(value = "팀 배열", required = true, example = "Eagles,Twins")
+            @RequestParam(value = "teams") String[] teamArray,
+            @ApiParam(value = "선수 생년월일", required = true, example = "100000,300000", defaultValue = "0,10000000")
+            @RequestParam(value = "salary_range") int[] salaryRange
+    ) {
+        PositionInfo[] positionArray = { PositionInfo.P };
+        PlayerRangeDTO dto = PlayerRangeDTO.createDTO(ageRange, positionArray, teamArray, salaryRange);
+        return new ResponseEntity<>(pitcherStatService.findRightPitcher(dto, year), HttpStatus.OK);
     }
 
 }
