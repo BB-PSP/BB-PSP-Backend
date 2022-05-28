@@ -111,6 +111,7 @@ public class PitcherStatService {
         List<PitcherStatNPlayerDTO> pitcherStatNPlayerDTOList = new ArrayList<>();
         playerRepository.findPitchersByAgeWithTeam(playerRangeDTO.getAgeStart(), playerRangeDTO.getAgeEnd(), year)
                 .stream()
+                .filter(player -> playerRangeDTO.getSalaryStart() <= player.getSalary() && player.getSalary() <= playerRangeDTO.getSalaryEnd())
                 .filter(player -> playerRangeDTO.getTeamList().contains(player.getTeam().getName()))
                 .filter(player -> playerRangeDTO.getPositionList().contains(player.getPosition()))
                 .forEach(player -> {
