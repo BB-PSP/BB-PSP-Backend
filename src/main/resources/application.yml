@@ -1,16 +1,16 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/bb_psp?serverTimezone=Asia/Seoul
-    username: cos
-    password: Cos1234@
+    url: RDS_PASSWORD
+    username: RDS_URL
+    password: RDS_USERNAME
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
       #        show_sql: true // sys out으로 로그가 찍힘
@@ -20,4 +20,7 @@ spring:
 logging:
   level:
     org.hibernate.SQL: debug # 로거로 로그가 찍힘
-    org.hibernate.type: trace
+#    org.hibernate.type: trace
+
+server:
+  port: 8081
