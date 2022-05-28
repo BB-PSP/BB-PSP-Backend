@@ -1,6 +1,8 @@
 package bbpsp.backend.domain.dto.request;
 
 import bbpsp.backend.domain.enums.PositionInfo;
+import bbpsp.backend.domain.execption.IllegalPlayerRangeArgumentException;
+import bbpsp.backend.global.error.exception.ErrorCode;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
@@ -17,6 +19,9 @@ import java.util.List;
 public class PlayerRangeDTO {
 
     public static PlayerRangeDTO createDTO(int[] ageRange, PositionInfo[] positionArray, String[] teamArray, int[] salaryRange) {
+        if (positionArray.length != 2 || salaryRange.length != 2) {
+            throw new IllegalPlayerRangeArgumentException(ErrorCode.ARGUMENT_COUNT_MUST_BE_TWO);
+        }
         List<PositionInfo> positionList = new ArrayList<>(Arrays.asList(positionArray));
         List<String> teamList = new ArrayList<>(Arrays.asList(teamArray));
         return new PlayerRangeDTO(ageRange[0], ageRange[1], salaryRange[0], salaryRange[1], positionList, teamList);

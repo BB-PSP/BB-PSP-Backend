@@ -20,6 +20,7 @@ public enum ErrorCode {
     NO_SUCH_TEAM(404, "T001", "존재하지 않는 팀입니다."),
     // Player
     NO_SUCH_PLAYER(404, "P001", "존재하지 않는 선수입니다."),
+    ARGUMENT_COUNT_MUST_BE_TWO(400, "P002", "연봉, 나이는 반드시 [범위 시작, 범위 끝] 2개만 입력해야합니다."),
 
     // BatterStat
     NO_SUCH_BATTER_STAT(404, "BS001", "해당 선수의 타자 기록이 존재하지 않습니다."),
