@@ -1,9 +1,10 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: RDS_PASSWORD
-    username: RDS_URL
-    password: RDS_USERNAME
+    url: ENC(+3wh4JOYnVjQ/98w29pVsyCVYs99YMtP)
+    username: ENC(2kd5AG9x7ZNYS7WxB8G10Ro4CFTdPzgc)
+    password: ENC(VT2qsmopni291+Mdf0Kp/3/8FVihK52R)
+
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -16,6 +17,10 @@ spring:
       #        show_sql: true // sys out으로 로그가 찍힘
         format_sql: true
         default_batch_fetch_size: 100
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
 
 logging:
   level:
