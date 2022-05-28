@@ -19,7 +19,7 @@ import java.util.List;
 public class PlayerRangeDTO {
 
     public static PlayerRangeDTO createDTO(int[] ageRange, PositionInfo[] positionArray, String[] teamArray, int[] salaryRange) {
-        if (positionArray.length != 2 || salaryRange.length != 2) {
+        if (ageRange.length != 2 || salaryRange.length != 2) {
             throw new IllegalPlayerRangeArgumentException(ErrorCode.ARGUMENT_COUNT_MUST_BE_TWO);
         }
         List<PositionInfo> positionList = new ArrayList<>(Arrays.asList(positionArray));
