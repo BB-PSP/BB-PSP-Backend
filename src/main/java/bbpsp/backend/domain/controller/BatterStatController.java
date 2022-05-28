@@ -94,13 +94,13 @@ public class BatterStatController {
     public ResponseEntity<List<BatterStatNPlayerDTO>> batterRange(
             @ApiParam(value = "연도", required = true, example = "2021")
             @PathVariable("year") int year,
-            @ApiParam(value = "나이 범위 시작", required = true, example = "20,30")
+            @ApiParam(value = "나이 범위(범위 시작, 범위 끝)", required = true, example = "20,30")
             @RequestParam(value = "age_range") int[] ageRange,
             @ApiParam(value = "포지션 배열", required = true, example = "SS,2B,C")
             @RequestParam(value = "positions") PositionInfo[] positionArray,
             @ApiParam(value = "팀 배열", required = true, example = "Eagles,Twins")
             @RequestParam(value = "teams") String[] teamArray,
-            @ApiParam(value = "선수 생년월일", required = true, example = "100000,300000", defaultValue = "0,10000000")
+            @ApiParam(value = "연봉 범위(범위 시작, 범위 끝)", required = true, example = "100000,300000", defaultValue = "0,10000000")
             @RequestParam(value = "salary_range") int[] salaryRange
     ) {
         PlayerRangeDTO dto = PlayerRangeDTO.createDTO(ageRange, positionArray, teamArray, salaryRange);

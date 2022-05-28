@@ -112,6 +112,7 @@ public class BatterStatService {
         }
         playerRepository.findBattersByAgeWithTeam(playerRangeDTO.getAgeStart(), playerRangeDTO.getAgeEnd(), year)
                 .stream()
+                .filter(player -> playerRangeDTO.getSalaryStart() <= player.getSalary() && player.getSalary() <= playerRangeDTO.getSalaryEnd())
                 .filter(player -> playerRangeDTO.getTeamList().contains(player.getTeam().getName()))
                 .filter(player -> playerRangeDTO.getPositionList().contains(player.getPosition()))
                 .forEach(player -> {
