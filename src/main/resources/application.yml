@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ENC(+3wh4JOYnVjQ/98w29pVsyCVYs99YMtP)
-    username: ENC(2kd5AG9x7ZNYS7WxB8G10Ro4CFTdPzgc)
-    password: ENC(VT2qsmopni291+Mdf0Kp/3/8FVihK52R)
+    url: ENC(QwSoVTvxVFUJBLEiRx+v1QzzBWUH/QYYh1phzQbnZ7VgBm36zql1wd9ZH5mtGTNhlhgTSxleaCXYbrbe1LRkAumatKcSofJrYk8Lmdie7SlDExUUvkdhEw==)
+    username: ENC(43POj+5V+uMu0paVRS7XEbKlSe6yLFmb)
+    password: ENC(0/hmDqqaUMpRs85XbhrKWk1GZCMe8B3Q)
 
   mvc:
     pathmatch:
@@ -17,6 +17,7 @@ spring:
       #        show_sql: true // sys out으로 로그가 찍힘
         format_sql: true
         default_batch_fetch_size: 100
+    database: mysql
 
 jasypt:
   encryptor:
