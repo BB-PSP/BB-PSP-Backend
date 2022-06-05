@@ -75,7 +75,7 @@ public class PredictionService {
     }
 
     private PredictBatterDTO predictBatterStat(BatterStat batterStat, Player player) {
-        String BATTER_WEIGHT_DATA_PATH = "src/main/resources/static/predict/BATTER_WEIGHT_DATA.csv";
+        String BATTER_WEIGHT_DATA_PATH = "/home/ubuntu/travis-ci/zip/src/main/resources/static/predict/BATTER_WEIGHT_DATA.csv";
         List<List<String>> batterWeightList = readCSV(BATTER_WEIGHT_DATA_PATH);
         // G, AB, PA, AVG, R, RBI, H, HR, BB, OBP, SLG
         double[] predictedBatterStatArray = new double[BATTER_PREDICT_FEATURE_COUNT];
@@ -137,7 +137,7 @@ public class PredictionService {
     }
 
     private PredictPitcherDTO predictPitcherStat(PitcherStat pitcherStat, Player player) {
-        String PITCHER_WEIGHT_DATA_PATH = "src/main/resources/static/predict/PITCHER_WEIGHT_DATA.csv";
+        String PITCHER_WEIGHT_DATA_PATH = "/home/ubuntu/travis-ci/zip/src/main/resources/static/predict/PITCHER_WEIGHT_DATA.csv";
         List<List<String>> pitcherWeightList = readCSV(PITCHER_WEIGHT_DATA_PATH);
         // G, IP, ERA, WHIP, W, L, SO, HLD, S
         double[] predictedPitcherStatArray = new double[PITCHER_PREDICT_FEATURE_COUNT];
