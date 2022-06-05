@@ -4,25 +4,15 @@ import bbpsp.backend.domain.domain.persist.BatterStat;
 import bbpsp.backend.domain.domain.persist.PitcherStat;
 import bbpsp.backend.domain.domain.persist.Player;
 import bbpsp.backend.domain.domain.persist.Season;
-import bbpsp.backend.domain.dto.request.PlayerInfoListDTO;
-import bbpsp.backend.domain.dto.response.AVGSampleDTO;
 import bbpsp.backend.domain.dto.response.PredictBatterDTO;
 import bbpsp.backend.domain.dto.response.PredictPitcherDTO;
 import bbpsp.backend.domain.enums.PositionInfo;
-import bbpsp.backend.domain.enums.batterweight.WeightAVG;
-import bbpsp.backend.domain.enums.batterweight.WeightH;
-import bbpsp.backend.domain.enums.batterweight.WeightHR;
-import bbpsp.backend.domain.enums.etc.WeightwOBA;
-import bbpsp.backend.domain.execption.NoSuchBatterStatException;
 import bbpsp.backend.domain.execption.NoSuchPlayerException;
 import bbpsp.backend.domain.execption.NoSuchSeasonException;
-import bbpsp.backend.domain.repository.BatterStatRepository;
 import bbpsp.backend.domain.repository.PlayerRepository;
 import bbpsp.backend.domain.repository.SeasonRepository;
 import bbpsp.backend.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -33,7 +23,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -155,13 +144,13 @@ public class PredictionService {
         int[] indexArray = {4, 11, 3, 27, 1, 2, 22, 10, 8};
         // Age,W,L,ERA,G,GS,CG,ShO,SV,BS,HLD,IP,TBF,H,R,ER,HR,BB,IBB,HBP,WP,BK,SO,K_9,BB_9,H_9,HR_9,WHIP,BABIP,LOB_PCT,FIP
         double[] pitcherStatArray = makePitcherStatArray(pitcherStat, player);
-        for (int i = 0; i < PITCHER_PREDICT_FEATURE_COUNT; i++) {
-            double sum = 0;
-            for (int j = 0; j < PITCHER_FEATURE_COUNT; j++) {
-                sum += pitcherStatArray[j] * Double.parseDouble(pitcherWeightList.get(i + 1).get(j + 1));
-            }
-            pitcherStatArray[indexArray[i]] = sum;
-        }
+//        for (int i = 0; i < PITCHER_PREDICT_FEATURE_COUNT; i++) {
+//            double sum = 0;
+//            for (int j = 0; j < PITCHER_FEATURE_COUNT; j++) {
+//                sum += pitcherStatArray[j] * Double.parseDouble(pitcherWeightList.get(i + 1).get(j + 1));
+//            }
+//            pitcherStatArray[indexArray[i]] = sum;
+//        }
         for (int i = 0; i < PITCHER_PREDICT_FEATURE_COUNT; i++) {
             double sum = 0;
             for (int j = 0; j < PITCHER_FEATURE_COUNT; j++) {
