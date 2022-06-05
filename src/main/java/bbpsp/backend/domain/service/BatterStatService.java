@@ -10,6 +10,8 @@ import bbpsp.backend.domain.dto.response.batterstat.BatterStatDTO;
 import bbpsp.backend.domain.dto.response.batterstat.BatterStatNPlayerDTO;
 import bbpsp.backend.domain.dto.response.PlayerDTO;
 import bbpsp.backend.domain.dto.response.batterstat.BatterStatWithYearDTO;
+import bbpsp.backend.domain.dto.response.pitcherstat.PitcherStatDTO;
+import bbpsp.backend.domain.dto.response.pitcherstat.PitcherStatNPlayerDTO;
 import bbpsp.backend.domain.enums.PositionInfo;
 import bbpsp.backend.domain.execption.*;
 import bbpsp.backend.domain.repository.BatterStatRepository;
@@ -127,8 +129,8 @@ public class BatterStatService {
         return batterStatNPlayerDTOList;
     }
 
-    public PlayerListDTO recommendBatter(int year, String name, LocalDate birth) {
-        PlayerListDTO playerListDTO = new PlayerListDTO();
+    public List<BatterStatNPlayerDTO> recommendBatter(int year, String name, LocalDate birth) {
+        List<BatterStatNPlayerDTO> dtoList = new ArrayList<>();
         Season season = seasonRepository.findByYear(year)
                 .orElseThrow(() -> new NoSuchSeasonException(ErrorCode.NO_SUCH_SEASON));
         Player player = playerRepository.findByNameAndBirthWithYear(name, birth, season.getId())
@@ -151,8 +153,12 @@ public class BatterStatService {
                         || p.getBatterStat().getHR() >= batterStat.getH()
                         || p.getBatterStat().getOBP() >= batterStat.getOBP()
                         || p.getBatterStat().getOBP() + p.getBatterStat().getSLG() >= batterStat.getOBP() + batterStat.getSLG())
-                .forEach(p -> playerListDTO.addPlayer(PlayerDTO.createPlayerDTO(p)));
-        return playerListDTO;
+                .forEach(p -> {
+                    PlayerDTO playerDTO = PlayerDTO.createPlayerDTO(p);
+                    BatterStatDTO batterStatDTO = BatterStatDTO.createBatterStatDTO(p.getBatterStat());
+                    dtoList.add(BatterStatNPlayerDTO.createDTO(batterStatDTO, playerDTO));
+                });
+        return dtoList;
     }
 
     private ArrayList<PositionInfo> makeInfielderList() {
