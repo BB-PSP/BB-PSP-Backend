@@ -30,6 +30,7 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
 
     @Query("SELECT p FROM Player p " +
             " LEFT JOIN FETCH p.batterStat b" +
+            " LEFT JOIN FETCH p.pitcherStat ps" +
             " LEFT JOIN FETCH p.team t" +
             " LEFT JOIN FETCH t.season s" +
             " WHERE s.id =:seasonId")
@@ -38,6 +39,7 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
 
     @Query("SELECT p FROM Player p" +
             " LEFT JOIN FETCH p.batterStat b" +
+            " LEFT JOIN FETCH p.pitcherStat ps" +
             " LEFT JOIN FETCH p.team t" +
             " LEFT JOIN FETCH t.season s" +
             " WHERE s.id =:seasonId")
@@ -45,6 +47,7 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
 
     @Query("SELECT p FROM Player p" +
             " LEFT JOIN FETCH p.batterStat b" +
+            " LEFT JOIN FETCH p.pitcherStat ps" +
             " LEFT JOIN FETCH p.team t" +
             " LEFT JOIN FETCH t.season s" +
             " WHERE p.name =:name AND p.birth =:birth")
@@ -52,6 +55,7 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
 
     @Query("SELECT p FROM Player p" +
             " LEFT JOIN FETCH p.batterStat b" +
+            " LEFT JOIN FETCH p.pitcherStat ps" +
             " LEFT JOIN FETCH p.team t" +
             " LEFT JOIN FETCH t.season s" +
             " WHERE p.name =:name AND p.birth =:birth AND s.id =:seasonId")
