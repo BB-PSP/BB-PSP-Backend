@@ -123,4 +123,44 @@ public class PitcherStatService {
                 });
         return pitcherStatNPlayerDTOList;
     }
+
+    public PlayerListDTO recommendPitcher(int year, String name, LocalDate birth) {
+        PlayerListDTO playerListDTO = new PlayerListDTO();
+        Season season = seasonRepository.findByYear(year)
+                .orElseThrow(() -> new NoSuchSeasonException(ErrorCode.NO_SUCH_SEASON));
+        Player player = playerRepository.findByNameAndBirthWithYear(name, birth, season.getId())
+                .orElseThrow(() -> new NoSuchPlayerException(ErrorCode.NO_SUCH_PLAYER));
+        PitcherStat pitcherStat = player.getPitcherStat();
+        if (pitcherStat.getIP() >= 100) { // 투수가 선발이라고 간주
+            playerRepository.findAllByYearWithStat(season.getId())
+                    .stream()
+                    .filter(p -> p.getPosition().equals(PositionInfo.P))
+                    .filter(p -> !(p.getName().equals(player.getName()) && p.getBirth().equals(player.getBirth())))
+                    .filter(p -> p.getPitcherStat().getIP() >= 100)
+                    .filter(p -> p.getPitcherStat().getW() >= pitcherStat.getW()
+                            || p.getPitcherStat().getSO() >= pitcherStat.getSO()
+                            || p.getPitcherStat().getERA() <= pitcherStat.getERA()
+                            || (p.getPitcherStat().getBB() + p.getPitcherStat().getHBP() < pitcherStat.getBB() + pitcherStat.getHBP()
+                                    && p.getPitcherStat().getIP() >= pitcherStat.getIP())
+                    )
+                    .forEach(p -> playerListDTO.addPlayer(PlayerDTO.createPlayerDTO(p)));
+        } else { // 투수가 불펜이라고 간주
+            playerRepository.findAllByYearWithStat(season.getId())
+                    .stream()
+                    .filter(p -> p.getPosition().equals(PositionInfo.P))
+                    .filter(p -> !(p.getName().equals(player.getName()) && p.getBirth().equals(player.getBirth())))
+                    .filter(p -> p.getPitcherStat().getIP() < 100)
+                    .filter(p -> {
+                        if (pitcherStat.getSV() >= pitcherStat.getHLD()) {
+                            return p.getPitcherStat().getSV() > pitcherStat.getSV();
+                        } else {
+                            return p.getPitcherStat().getHLD() > pitcherStat.getHLD();
+                        }
+                    })
+                    .filter(p -> p.getPitcherStat().getIP() > pitcherStat.getIP() && p.getPitcherStat().getWHIP() <= pitcherStat.getWHIP())
+                    .forEach(p -> playerListDTO.addPlayer(PlayerDTO.createPlayerDTO(p)));
+        }
+
+        return playerListDTO;
+    }
 }

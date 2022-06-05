@@ -1,6 +1,7 @@
 package bbpsp.backend.domain.controller;
 
 import bbpsp.backend.domain.dto.request.PlayerRangeDTO;
+import bbpsp.backend.domain.dto.response.PlayerListDTO;
 import bbpsp.backend.domain.dto.response.batterstat.BatterStatNPlayerDTO;
 import bbpsp.backend.domain.dto.response.pitcherstat.PitcherStatNPlayerDTO;
 import bbpsp.backend.domain.dto.response.pitcherstat.PitcherAllStatNInfoDTO;
@@ -91,6 +92,18 @@ public class PitcherStatController {
         PositionInfo[] positionArray = { PositionInfo.P };
         PlayerRangeDTO dto = PlayerRangeDTO.createDTO(ageRange, positionArray, teamArray, salaryRange);
         return new ResponseEntity<>(pitcherStatService.findRightPitcher(dto, year), HttpStatus.OK);
+    }
+
+    @GetMapping("/stat/recommend/{year}")
+    @ApiOperation(value = "특정 선수에 대한 추천 선수 리스트를 가져오기", notes = "Request Param으로 선수 이름, 생일 정부를 넘겨 추천 선수 리스트를 가져오는 API")
+    public ResponseEntity<PlayerListDTO> pitcherRecommend(
+            @ApiParam(value = "연도", required = true, example = "2021")
+            @PathVariable("year") int year,
+            @ApiParam(value = "선수 이름", required = true, example = "정은원")
+            @RequestParam(value = "name") String name,
+            @ApiParam(value = "선수 생일", required = true, example = "1991-01-01")
+            @RequestParam(value = "birth") @DateTimeFormat(iso = DATE) LocalDate birth) {
+        return new ResponseEntity<>(pitcherStatService.recommendPitcher(year, name, birth), HttpStatus.OK);
     }
 
 }

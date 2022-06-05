@@ -28,6 +28,14 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
     @Transactional(readOnly = true)
     List<Player> findAllByYear(@Param("seasonId")Long seasonId);
 
+    @Query("SELECT p FROM Player p " +
+            " LEFT JOIN FETCH p.batterStat b" +
+            " LEFT JOIN FETCH p.team t" +
+            " LEFT JOIN FETCH t.season s" +
+            " WHERE s.id =:seasonId")
+    @Transactional(readOnly = true)
+    List<Player> findAllByYearWithStat(@Param("seasonId")Long seasonId);
+
     @Query("SELECT p FROM Player p" +
             " LEFT JOIN FETCH p.batterStat b" +
             " LEFT JOIN FETCH p.team t" +
@@ -41,6 +49,13 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
             " LEFT JOIN FETCH t.season s" +
             " WHERE p.name =:name AND p.birth =:birth")
     List<Player> findByNameAndBirth(@Param("name") String name, @Param("birth") LocalDate birth);
+
+    @Query("SELECT p FROM Player p" +
+            " LEFT JOIN FETCH p.batterStat b" +
+            " LEFT JOIN FETCH p.team t" +
+            " LEFT JOIN FETCH t.season s" +
+            " WHERE p.name =:name AND p.birth =:birth AND s.id =:seasonId")
+    Optional<Player> findByNameAndBirthWithYear(@Param("name") String name, @Param("birth") LocalDate birth, @Param("seasonId") Long seasonId);
 
     @Query("SELECT p FROM Player p" +
             " LEFT JOIN FETCH p.team t" +
@@ -68,4 +83,6 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
             " WHERE s.year=:year" +
             " AND p.age>=:ageStart AND p.age<=:ageEnd")
     List<Player> findBattersByAgeWithTeam(@Param("ageStart")int ageStart, @Param("ageEnd")int ageEnd, @Param("year")int year);
+
+
 }

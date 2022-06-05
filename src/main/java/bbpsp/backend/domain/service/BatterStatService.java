@@ -4,6 +4,7 @@ import bbpsp.backend.domain.domain.persist.BatterStat;
 import bbpsp.backend.domain.domain.persist.Player;
 import bbpsp.backend.domain.domain.persist.Team;
 import bbpsp.backend.domain.dto.request.PlayerRangeDTO;
+import bbpsp.backend.domain.dto.response.PlayerListDTO;
 import bbpsp.backend.domain.dto.response.batterstat.BatterAllStatNInfoDTO;
 import bbpsp.backend.domain.dto.response.batterstat.BatterStatDTO;
 import bbpsp.backend.domain.dto.response.batterstat.BatterStatNPlayerDTO;
@@ -20,6 +21,7 @@ import bbpsp.backend.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -123,5 +125,43 @@ public class BatterStatService {
                     batterStatNPlayerDTOList.add(BatterStatNPlayerDTO.createDTO(batterStatDTO, playerDTO));
                 });
         return batterStatNPlayerDTOList;
+    }
+
+    public PlayerListDTO recommendBatter(int year, String name, LocalDate birth) {
+        PlayerListDTO playerListDTO = new PlayerListDTO();
+        Season season = seasonRepository.findByYear(year)
+                .orElseThrow(() -> new NoSuchSeasonException(ErrorCode.NO_SUCH_SEASON));
+        Player player = playerRepository.findByNameAndBirthWithYear(name, birth, season.getId())
+                .orElseThrow(() -> new NoSuchPlayerException(ErrorCode.NO_SUCH_PLAYER));
+        BatterStat batterStat = player.getBatterStat();
+        playerRepository.findAllByYearWithStat(season.getId())
+                .stream()
+                .filter(p -> !p.getPosition().equals(PositionInfo.P))
+                .filter(p -> !(p.getName().equals(player.getName()) && p.getBirth().equals(player.getBirth())))
+                .filter(p -> {
+                    ArrayList<PositionInfo> infielderList = makeInfielderList();
+                    if (infielderList.contains(player.getPosition())) {
+                        return p.getPosition().equals(PositionInfo.IF)
+                                || p.getPosition().equals(player.getPosition());
+                    } else {
+                        return p.getPosition().equals(PositionInfo.OF);
+                    }
+                })
+                .filter(p -> p.getBatterStat().getH() >= batterStat.getH()
+                        || p.getBatterStat().getHR() >= batterStat.getH()
+                        || p.getBatterStat().getOBP() >= batterStat.getOBP()
+                        || p.getBatterStat().getOBP() + p.getBatterStat().getSLG() >= batterStat.getOBP() + batterStat.getSLG())
+                .forEach(p -> playerListDTO.addPlayer(PlayerDTO.createPlayerDTO(p)));
+        return playerListDTO;
+    }
+
+    private ArrayList<PositionInfo> makeInfielderList() {
+        ArrayList<PositionInfo> list = new ArrayList<>();
+        list.add(PositionInfo._1B);
+        list.add(PositionInfo._2B);
+        list.add(PositionInfo._3B);
+        list.add(PositionInfo.SS);
+        list.add(PositionInfo.IF);
+        return list;
     }
 }

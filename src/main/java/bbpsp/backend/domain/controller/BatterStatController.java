@@ -2,6 +2,7 @@ package bbpsp.backend.domain.controller;
 
 import bbpsp.backend.domain.dto.request.PlayerInfoListDTO;
 import bbpsp.backend.domain.dto.request.PlayerRangeDTO;
+import bbpsp.backend.domain.dto.response.PlayerListDTO;
 import bbpsp.backend.domain.dto.response.PredictBatterDTO;
 import bbpsp.backend.domain.dto.response.batterstat.BatterAllStatNInfoDTO;
 import bbpsp.backend.domain.dto.response.batterstat.BatterStatNPlayerDTO;
@@ -36,7 +37,6 @@ public class BatterStatController {
      * 4. 특정 타자의 예측된 기록(3년치) 가져오기
      * 5. 특정 타자의 예측된 기록(1년치) 가져오기
      * 6. 미래 특정 시즌(3년 이내)의 예측된 타자 전체 기록 가져오기
-     *
      */
 
     // 1. 특정 년도의 타자 전체 기록 가져오기(페이징)
@@ -84,13 +84,13 @@ public class BatterStatController {
             @PathVariable(value = "year") int year,
             @ApiParam(value = "팀 상징", required = true, example = "Eagles")
             @PathVariable(value = "symbol") String symbol
-            ) {
+    ) {
         return new ResponseEntity<>(batterStatService.findAllByTeam(year, symbol), HttpStatus.OK);
     }
 
     // 5. 특정 년도의 RequestBody로 넘어온 조건의 타자들 기록 가져오기
     @GetMapping("/stat/range/{year}")
-    @ApiOperation(value = "특정 년도의 RequestBody로 넘어온 조건의 투수들 기록 가져오기", notes = "json으로 넘어온 투수들 기록을 가져오는 API")
+    @ApiOperation(value = "특정 년도의 RequestBody로 넘어온 조건의 투수들 기록 가져오기", notes = "Request Parameter로 넘어온 투수들 기록을 가져오는 API")
     public ResponseEntity<List<BatterStatNPlayerDTO>> batterRange(
             @ApiParam(value = "연도", required = true, example = "2021")
             @PathVariable("year") int year,
@@ -101,10 +101,20 @@ public class BatterStatController {
             @ApiParam(value = "팀 배열", required = true, example = "Eagles,Twins")
             @RequestParam(value = "teams") String[] teamArray,
             @ApiParam(value = "연봉 범위(범위 시작, 범위 끝)", required = true, example = "100000,300000", defaultValue = "0,10000000")
-            @RequestParam(value = "salary_range") int[] salaryRange
-    ) {
+            @RequestParam(value = "salary_range") int[] salaryRange) {
         PlayerRangeDTO dto = PlayerRangeDTO.createDTO(ageRange, positionArray, teamArray, salaryRange);
         return new ResponseEntity<>(batterStatService.findRightBatter(dto, year), HttpStatus.OK);
     }
 
+    @GetMapping("/stat/recommend/{year}")
+    @ApiOperation(value = "특정 선수에 대한 추천 선수 리스트를 가져오기", notes = "Request Param으로 선수 이름, 생일 정부를 넘겨 추천 선수 리스트를 가져오는 API")
+    public ResponseEntity<PlayerListDTO> batterRecommend(
+            @ApiParam(value = "연도", required = true, example = "2021")
+            @PathVariable("year") int year,
+            @ApiParam(value = "선수 이름", required = true, example = "정은원")
+            @RequestParam(value = "name") String name,
+            @ApiParam(value = "선수 생일", required = true, example = "1991-01-01")
+            @RequestParam(value = "birth") @DateTimeFormat(iso = DATE) LocalDate birth) {
+        return new ResponseEntity<>(batterStatService.recommendBatter(year, name, birth), HttpStatus.OK);
+    }
 }
