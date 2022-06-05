@@ -96,7 +96,7 @@ public class PitcherStatController {
 
     @GetMapping("/stat/recommend/{year}")
     @ApiOperation(value = "특정 선수에 대한 추천 선수 리스트를 가져오기", notes = "Request Param으로 선수 이름, 생일 정부를 넘겨 추천 선수 리스트를 가져오는 API")
-    public ResponseEntity<PlayerListDTO> pitcherRecommend(
+    public ResponseEntity<List<PitcherStatNPlayerDTO>> pitcherRecommend(
             @ApiParam(value = "연도", required = true, example = "2021")
             @PathVariable("year") int year,
             @ApiParam(value = "선수 이름", required = true, example = "정은원")

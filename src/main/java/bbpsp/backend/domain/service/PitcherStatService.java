@@ -124,8 +124,8 @@ public class PitcherStatService {
         return pitcherStatNPlayerDTOList;
     }
 
-    public PlayerListDTO recommendPitcher(int year, String name, LocalDate birth) {
-        PlayerListDTO playerListDTO = new PlayerListDTO();
+    public List<PitcherStatNPlayerDTO> recommendPitcher(int year, String name, LocalDate birth) {
+        List<PitcherStatNPlayerDTO> dtoList = new ArrayList<>();
         Season season = seasonRepository.findByYear(year)
                 .orElseThrow(() -> new NoSuchSeasonException(ErrorCode.NO_SUCH_SEASON));
         Player player = playerRepository.findByNameAndBirthWithYear(name, birth, season.getId())
@@ -143,7 +143,11 @@ public class PitcherStatService {
                             || (p.getPitcherStat().getBB() + p.getPitcherStat().getHBP() < pitcherStat.getBB() + pitcherStat.getHBP()
                                     && p.getPitcherStat().getIP() >= pitcherStat.getIP())
                     )
-                    .forEach(p -> playerListDTO.addPlayer(PlayerDTO.createPlayerDTO(p)));
+                    .forEach(p -> {
+                        PlayerDTO playerDTO = PlayerDTO.createPlayerDTO(p);
+                        PitcherStatDTO pitcherStatDTO = PitcherStatDTO.createDTO(p.getPitcherStat());
+                        dtoList.add(PitcherStatNPlayerDTO.createDTO(pitcherStatDTO, playerDTO));
+                    });
         } else { // 투수가 불펜이라고 간주
             playerRepository.findAllByYearWithStat(season.getId())
                     .stream()
@@ -158,9 +162,13 @@ public class PitcherStatService {
                         }
                     })
                     .filter(p -> p.getPitcherStat().getIP() > pitcherStat.getIP() && p.getPitcherStat().getWHIP() <= pitcherStat.getWHIP())
-                    .forEach(p -> playerListDTO.addPlayer(PlayerDTO.createPlayerDTO(p)));
+                    .forEach(p -> {
+                        PlayerDTO playerDTO = PlayerDTO.createPlayerDTO(p);
+                        PitcherStatDTO pitcherStatDTO = PitcherStatDTO.createDTO(p.getPitcherStat());
+                        dtoList.add(PitcherStatNPlayerDTO.createDTO(pitcherStatDTO, playerDTO));
+                    });
         }
 
-        return playerListDTO;
+        return dtoList;
     }
 }
