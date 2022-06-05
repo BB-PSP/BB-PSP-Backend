@@ -1,8 +1,5 @@
 package bbpsp.backend.domain.controller;
 
-import bbpsp.backend.domain.dto.request.PlayerInfoListDTO;
-import bbpsp.backend.domain.dto.request.PlayerRangeDTO;
-import bbpsp.backend.domain.dto.response.AVGSampleDTO;
 import bbpsp.backend.domain.dto.response.PredictBatterDTO;
 import bbpsp.backend.domain.dto.response.PredictPitcherDTO;
 import bbpsp.backend.domain.service.PredictionService;
