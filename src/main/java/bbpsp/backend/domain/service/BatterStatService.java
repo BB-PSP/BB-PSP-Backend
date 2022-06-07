@@ -149,8 +149,9 @@ public class BatterStatService {
                         return p.getPosition().equals(PositionInfo.OF);
                     }
                 })
+                .filter(p -> p.getBatterStat().getPA() >= batterStat.getPA() * 2 / 3)
                 .filter(p -> p.getBatterStat().getH() >= batterStat.getH()
-                        || p.getBatterStat().getHR() >= batterStat.getH()
+                        || p.getBatterStat().getHR() >= batterStat.getHR()
                         || p.getBatterStat().getOBP() >= batterStat.getOBP()
                         || p.getBatterStat().getOBP() + p.getBatterStat().getSLG() >= batterStat.getOBP() + batterStat.getSLG())
                 .forEach(p -> {
