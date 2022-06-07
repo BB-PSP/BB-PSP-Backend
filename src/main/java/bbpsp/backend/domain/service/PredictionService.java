@@ -34,8 +34,8 @@ public class PredictionService {
     private final int BATTER_PREDICT_FEATURE_COUNT = 11;
     private final int PITCHER_FEATURE_COUNT = 31;
     private final int PITCHER_PREDICT_FEATURE_COUNT = 9;
-    private final String START_PITCHER_WEIGHT_DATA_PATH = "src/main/resources/static/predict/PITCHER_WEIGHT_DATA_START.csv";
-    private final String RELIEF_PITCHER_WEIGHT_DATA_PATH = "src/main/resources/static/predict/PITCHER_WEIGHT_DATA_RELIEF.csv";
+    private final String START_PITCHER_WEIGHT_DATA_PATH = "/home/ubuntu/travis-ci/zip/src/main/resources/static/predict/PITCHER_WEIGHT_DATA_START.csv";
+    private final String RELIEF_PITCHER_WEIGHT_DATA_PATH = "/home/ubuntu/travis-ci/zip/src/main/resources/static/predict/PITCHER_WEIGHT_DATA_RELIEF.csv";
 
     public List<PredictBatterDTO> predictAllBatters(int year) {
         List<PredictBatterDTO> predictBatterDTOList = new ArrayList<>();
