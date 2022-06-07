@@ -34,6 +34,8 @@ public class PredictionService {
     private final int BATTER_PREDICT_FEATURE_COUNT = 11;
     private final int PITCHER_FEATURE_COUNT = 31;
     private final int PITCHER_PREDICT_FEATURE_COUNT = 9;
+    private final String START_PITCHER_WEIGHT_DATA_PATH = "src/main/resources/static/predict/PITCHER_WEIGHT_DATA_START.csv";
+    private final String RELIEF_PITCHER_WEIGHT_DATA_PATH = "src/main/resources/static/predict/PITCHER_WEIGHT_DATA_RELIEF.csv";
 
     public List<PredictBatterDTO> predictAllBatters(int year) {
         List<PredictBatterDTO> predictBatterDTOList = new ArrayList<>();
@@ -53,7 +55,13 @@ public class PredictionService {
         playerRepository.findAllByYearWithStat(season.getId())
                 .stream()
                 .filter(player -> player.getPosition().equals(PositionInfo.P))
-                .forEach(player -> predictPitcherDTOList.add(predictPitcherStat(player.getPitcherStat(), player)));
+                .forEach(player -> {
+                    if (player.getPitcherStat().getIP() >= 100) {
+                        predictPitcherDTOList.add(predictPitcherStat(player.getPitcherStat(), player, START_PITCHER_WEIGHT_DATA_PATH));
+                    } else {
+                        predictPitcherDTOList.add(predictPitcherStat(player.getPitcherStat(), player, RELIEF_PITCHER_WEIGHT_DATA_PATH));
+                    }
+                });
         return predictPitcherDTOList;
     }
 
@@ -71,7 +79,10 @@ public class PredictionService {
                 .orElseThrow(() -> new NoSuchSeasonException(ErrorCode.NO_SUCH_SEASON));
         Player player = playerRepository.findByNameAndBirthWithYear(name, birth, season.getId())
                 .orElseThrow(() -> new NoSuchPlayerException(ErrorCode.NO_SUCH_PLAYER));
-        return predictPitcherStat(player.getPitcherStat(), player);
+        if (player.getPitcherStat().getIP() >= 100) {
+            return predictPitcherStat(player.getPitcherStat(), player, START_PITCHER_WEIGHT_DATA_PATH);
+        }
+        return predictPitcherStat(player.getPitcherStat(), player, RELIEF_PITCHER_WEIGHT_DATA_PATH);
     }
 
     private PredictBatterDTO predictBatterStat(BatterStat batterStat, Player player) {
@@ -136,9 +147,8 @@ public class PredictionService {
         return batterStatArray;
     }
 
-    private PredictPitcherDTO predictPitcherStat(PitcherStat pitcherStat, Player player) {
-        String PITCHER_WEIGHT_DATA_PATH = "/home/ubuntu/travis-ci/zip/src/main/resources/static/predict/PITCHER_WEIGHT_DATA.csv";
-        List<List<String>> pitcherWeightList = readCSV(PITCHER_WEIGHT_DATA_PATH);
+    private PredictPitcherDTO predictPitcherStat(PitcherStat pitcherStat, Player player, String pitcherWeightDataPath) {
+        List<List<String>> pitcherWeightList = readCSV(pitcherWeightDataPath);
         // G, IP, ERA, WHIP, W, L, SO, HLD, S
         double[] predictedPitcherStatArray = new double[PITCHER_PREDICT_FEATURE_COUNT];
         int[] indexArray = {4, 11, 3, 27, 1, 2, 22, 10, 8};
@@ -159,11 +169,12 @@ public class PredictionService {
             predictedPitcherStatArray[i] = Math.round(sum * 100) / 100.0;
         }
         double pIP = tuneIP(predictedPitcherStatArray[1]);
-        int pHLD = pIP > 100 ? 0 : Math.max((int) predictedPitcherStatArray[7], 0);
-        int pSV = pIP > 100 ? 0 : Math.max((int) predictedPitcherStatArray[8], 0);
+        double pERA = Math.round((predictedPitcherStatArray[2] * 0.75) * 100) / 100.0;
+//        int pHLD = pIP > 100 ? 0 : Math.max((int) predictedPitcherStatArray[7], 0);
+//        int pSV = pIP > 100 ? 0 : Math.max((int) predictedPitcherStatArray[8], 0);
         return PredictPitcherDTO.createDTO(player.getName(), player.getAge() + 1, (int) predictedPitcherStatArray[0],
-                pIP, predictedPitcherStatArray[2], predictedPitcherStatArray[3], (int) predictedPitcherStatArray[4],
-                (int) predictedPitcherStatArray[5], (int) predictedPitcherStatArray[6], pHLD, pSV);
+                pIP, pERA, predictedPitcherStatArray[3], (int) predictedPitcherStatArray[4],
+                (int) predictedPitcherStatArray[5], (int) predictedPitcherStatArray[6], (int) predictedPitcherStatArray[7], (int) predictedPitcherStatArray[8]);
     }
 
     private double tuneIP(double v) {
