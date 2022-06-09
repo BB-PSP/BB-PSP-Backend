@@ -34,8 +34,10 @@ public class PredictionService {
     private final int BATTER_PREDICT_FEATURE_COUNT = 11;
     private final int PITCHER_FEATURE_COUNT = 31;
     private final int PITCHER_PREDICT_FEATURE_COUNT = 10;
-    private final String START_PITCHER_WEIGHT_DATA_PATH = "src/main/resources/static/predict/PITCHER_WEIGHT_DATA_START.csv";
-    private final String RELIEF_PITCHER_WEIGHT_DATA_PATH = "src/main/resources/static/predict/PITCHER_WEIGHT_DATA_RELIEF.csv";
+    private final String DATA_PATH = "/home/ubuntu/travis-ci/zip/src/main/resources/static/predict/";
+//    private final String DATA_PATH = "src/main/resources/static/predict/";
+    private final String START_PITCHER_WEIGHT_DATA_PATH = DATA_PATH + "PITCHER_WEIGHT_DATA_START.csv";
+    private final String RELIEF_PITCHER_WEIGHT_DATA_PATH = DATA_PATH + "PITCHER_WEIGHT_DATA_RELIEF.csv";
 
     public List<PredictBatterDTO> predictAllBatters(int year) {
         List<PredictBatterDTO> predictBatterDTOList = new ArrayList<>();
@@ -86,7 +88,7 @@ public class PredictionService {
     }
 
     private PredictBatterDTO predictBatterStat(BatterStat batterStat, Player player) {
-        String BATTER_WEIGHT_DATA_PATH = "src/main/resources/static/predict/BATTER_WEIGHT_DATA.csv";
+        String BATTER_WEIGHT_DATA_PATH = DATA_PATH + "BATTER_WEIGHT_DATA.csv";
         List<List<String>> batterWeightList = readCSV(BATTER_WEIGHT_DATA_PATH);
         // G, AB, PA, AVG, R, RBI, H, HR, BB, OBP, SLG
         double[] predictedBatterStatArray = new double[BATTER_PREDICT_FEATURE_COUNT];
