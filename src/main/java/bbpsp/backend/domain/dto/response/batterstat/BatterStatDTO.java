@@ -12,7 +12,7 @@ public class BatterStatDTO {
     private int _G;
 
     @ApiModelProperty(value = "타율", required = true, example = "0.312")
-    private Double _AVG;
+    private double _AVG;
 
     @ApiModelProperty(value = "타석", required = true, example = "312")
     private int _PA;
@@ -66,10 +66,13 @@ public class BatterStatDTO {
     private int _GDP;
 
     @ApiModelProperty(value = "장타율", required = true, example = "0.632")
-    private Double _SLG;
+    private double _SLG;
 
     @ApiModelProperty(value = "출루율", required = true, example = "0.378")
-    private Double _OBP;
+    private double _OBP;
+
+    @ApiModelProperty(value = "OPS", required = true, example = "1.010")
+    private double _OPS;
 
     @ApiModelProperty(value = "에러", required = true, example = "3")
     private int _E;
@@ -87,14 +90,14 @@ public class BatterStatDTO {
                 b.getG(), b.getAVG(), b.getPA(), b.getAB(), b.getR(),
                 b.getH(), b.get_1B(), b.get_2B(), b.get_3B(), b.getHR(), b.getTB(),
                 b.getRBI(), b.getSB(), b.getCS(), b.getBB(), b.getIBB(), b.getHBP(),
-                b.getSO(), b.getGDP(), b.getSLG(), b.getOBP(), b.getE(), b.getSH(), b.getSF()
+                b.getSO(), b.getGDP(), b.getSLG(), b.getOBP(), b.getOBP() + b.getSLG(), b.getE(), b.getSH(), b.getSF()
         );
     }
 
-    private BatterStatDTO(int G, Double AVG, int PA, int AB, int R,
+    private BatterStatDTO(int G, double AVG, int PA, int AB, int R,
                          int H, int _1B, int _2B, int _3B, int HR,
                          int TB, int RBI, int SB, int CS, int BB, int IBB, int HBP,
-                         int SO, int GDP, Double SLG, Double OBP, int E, int SH, int SF) {
+                         int SO, int GDP, double SLG, double OBP, double OPS, int E, int SH, int SF) {
         this._G = G;
         this._AVG = AVG;
         this._PA = PA;
@@ -116,6 +119,7 @@ public class BatterStatDTO {
         this._GDP = GDP;
         this._SLG = SLG;
         this._OBP = OBP;
+        this._OPS = OPS;
         this._E = E;
         this._SF = SF;
         this._SH = SH;
