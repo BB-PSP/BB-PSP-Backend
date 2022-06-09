@@ -110,14 +110,20 @@ public class PredictionService {
             }
             predictedBatterStatArray[i] = Math.round(sum * 1000) / 1000.0;
         }
-        double pAVG = Math.round(predictedBatterStatArray[6] / predictedBatterStatArray[1] * 1000) / 1000.0;
-        double pOPS = Math.round(predictedBatterStatArray[9] + predictedBatterStatArray[10] * 1000) / 1000.0;
+        tuneBatterOutlier(batterStatArray, predictedBatterStatArray, indexArray);
         int pG = Math.min((int) predictedBatterStatArray[0], 144);
+        int pPA = Math.min((int) predictedBatterStatArray[2], 144 * 4);
+        int pAB = Math.min((int) predictedBatterStatArray[1], 144 * 4);
+        int pH = (int) predictedBatterStatArray[6];
+        int pBB = (int) predictedBatterStatArray[8];
+        double pSLG = predictedBatterStatArray[10];
+        double pAVG = Math.round((double) pH / pAB * 1000) / 1000.0;
+        double pOBP = Math.round((pH + pBB) * 1.05 / pPA * 1000) / 1000.0;
+        double pOPS = Math.round((pOBP + pSLG) * 1000) / 1000.0;
         return PredictBatterDTO.createDTO(player.getName(), player.getAge() + 1, pG,
-                (int) predictedBatterStatArray[1], (int) predictedBatterStatArray[2], pAVG,
-                (int) predictedBatterStatArray[4], (int) predictedBatterStatArray[5], (int) predictedBatterStatArray[6],
-                (int) predictedBatterStatArray[7], (int) predictedBatterStatArray[8], predictedBatterStatArray[9],
-                predictedBatterStatArray[10], pOPS);
+                pAB, pPA, pAVG,
+                (int) predictedBatterStatArray[4], (int) predictedBatterStatArray[5], pH,
+                (int) predictedBatterStatArray[7], pBB, pOBP, pSLG, pOPS);
     }
 
     private PredictPitcherDTO predictPitcherStat(PitcherStat pitcherStat, Player player, String pitcherWeightDataPath) {
@@ -127,27 +133,41 @@ public class PredictionService {
         int[] indexArray = {4, 11, 3, 27, 1, 2, 22, 10, 8, 15};
         // Age,W,L,ERA,G,GS,CG,ShO,SV,BS,HLD,IP,TBF,H,R,ER,HR,BB,IBB,HBP,WP,BK,SO,K_9,BB_9,H_9,HR_9,WHIP,BABIP,LOB_PCT,FIP
         double[] pitcherStatArray = makePitcherStatArray(pitcherStat, player);
-//        for (int i = 0; i < PITCHER_PREDICT_FEATURE_COUNT; i++) {
-//            double sum = 0;
-//            for (int j = 0; j < PITCHER_FEATURE_COUNT; j++) {
-//                sum += pitcherStatArray[j] * Double.parseDouble(pitcherWeightList.get(i + 1).get(j + 1));
-//            }
-//            pitcherStatArray[indexArray[i]] = sum;
-//        }
-        for (int i = 0; i < PITCHER_PREDICT_FEATURE_COUNT; i++) {
+//
+        for (int i = 0; i < predictedPitcherStatArray.length; i++) {
             double sum = 0;
             for (int j = 0; j < PITCHER_FEATURE_COUNT; j++) {
                 sum += pitcherStatArray[j] * Double.parseDouble(pitcherWeightList.get(i + 1).get(j + 1));
             }
             predictedPitcherStatArray[i] = Math.round(sum * 100) / 100.0;
         }
+        tunePitcherOutlier(predictedPitcherStatArray);
         double pIP = tuneIP(predictedPitcherStatArray[1]);
         double pERA = Math.round((predictedPitcherStatArray[9] / predictedPitcherStatArray[2]) * 100) / 100.0;
-//        int pHLD = pIP > 100 ? 0 : Math.max((int) predictedPitcherStatArray[7], 0);
-//        int pSV = pIP > 100 ? 0 : Math.max((int) predictedPitcherStatArray[8], 0);
         return PredictPitcherDTO.createDTO(player.getName(), player.getAge() + 1, (int) predictedPitcherStatArray[0],
                 pIP, pERA, predictedPitcherStatArray[3], (int) predictedPitcherStatArray[4],
                 (int) predictedPitcherStatArray[5], (int) predictedPitcherStatArray[6], (int) predictedPitcherStatArray[7], (int) predictedPitcherStatArray[8]);
+    }
+
+    private void tuneBatterOutlier(double[] batterStatArray, double[] predictedBatterStatArray, int[] indexArray) {
+        int pG = (int) predictedBatterStatArray[0]; // 예측 경기수
+        int G = (int) batterStatArray[2];           // 작년 경기수
+        for (int i = 1; i < predictedBatterStatArray.length; i++) {
+            if (predictedBatterStatArray[i] <= 0) {
+                double tunedValue = batterStatArray[indexArray[i]] * pG / G;
+                predictedBatterStatArray[i] = Math.round(Math.abs(tunedValue) * 1000) / 1000.0; // 작년 경기수의 비율로 조정
+            }
+        }
+    }
+
+    private void tunePitcherOutlier(double[] predictedPitcherStatArray) {
+        double[] defaultValueArray = {5, 13, 5.07, 1.66, 0, 2, 12, 3, 0, 8};
+        for (int i = 1; i < predictedPitcherStatArray.length; i++) {
+            if (predictedPitcherStatArray[i] <= 0) {
+                double tunedValue = defaultValueArray[i];
+                predictedPitcherStatArray[i] = Math.round(tunedValue * 1000) / 1000.0; // 작년 경기수의 비율로 조정
+            }
+        }
     }
 
     private double[] makeBatterStatArray(BatterStat batterStat, Player player) {
