@@ -33,9 +33,9 @@ public class PredictionService {
     private final int BATTER_FEATURE_COUNT = 26;
     private final int BATTER_PREDICT_FEATURE_COUNT = 11;
     private final int PITCHER_FEATURE_COUNT = 31;
-    private final int PITCHER_PREDICT_FEATURE_COUNT = 9;
-    private final String START_PITCHER_WEIGHT_DATA_PATH = "/home/ubuntu/travis-ci/zip/src/main/resources/static/predict/PITCHER_WEIGHT_DATA_START.csv";
-    private final String RELIEF_PITCHER_WEIGHT_DATA_PATH = "/home/ubuntu/travis-ci/zip/src/main/resources/static/predict/PITCHER_WEIGHT_DATA_RELIEF.csv";
+    private final int PITCHER_PREDICT_FEATURE_COUNT = 10;
+    private final String START_PITCHER_WEIGHT_DATA_PATH = "src/main/resources/static/predict/PITCHER_WEIGHT_DATA_START.csv";
+    private final String RELIEF_PITCHER_WEIGHT_DATA_PATH = "src/main/resources/static/predict/PITCHER_WEIGHT_DATA_RELIEF.csv";
 
     public List<PredictBatterDTO> predictAllBatters(int year) {
         List<PredictBatterDTO> predictBatterDTOList = new ArrayList<>();
@@ -86,7 +86,7 @@ public class PredictionService {
     }
 
     private PredictBatterDTO predictBatterStat(BatterStat batterStat, Player player) {
-        String BATTER_WEIGHT_DATA_PATH = "/home/ubuntu/travis-ci/zip/src/main/resources/static/predict/BATTER_WEIGHT_DATA.csv";
+        String BATTER_WEIGHT_DATA_PATH = "src/main/resources/static/predict/BATTER_WEIGHT_DATA.csv";
         List<List<String>> batterWeightList = readCSV(BATTER_WEIGHT_DATA_PATH);
         // G, AB, PA, AVG, R, RBI, H, HR, BB, OBP, SLG
         double[] predictedBatterStatArray = new double[BATTER_PREDICT_FEATURE_COUNT];
@@ -100,6 +100,7 @@ public class PredictionService {
             }
             batterStatArray[indexArray[i]] = sum;
         }
+        batterStatArray[21] = batterStatArray[5] / batterStatArray[3];
         for (int i = 0; i < BATTER_PREDICT_FEATURE_COUNT; i++) {
             double sum = 0;
             for (int j = 0; j < BATTER_FEATURE_COUNT; j++) {
@@ -107,11 +108,44 @@ public class PredictionService {
             }
             predictedBatterStatArray[i] = Math.round(sum * 1000) / 1000.0;
         }
+        double pAVG = Math.round(predictedBatterStatArray[6] / predictedBatterStatArray[1] * 1000) / 1000.0;
+        double pOPS = Math.round(predictedBatterStatArray[9] + predictedBatterStatArray[10] * 1000) / 1000.0;
         int pG = Math.min((int) predictedBatterStatArray[0], 144);
         return PredictBatterDTO.createDTO(player.getName(), player.getAge() + 1, pG,
-                (int) predictedBatterStatArray[1], (int) predictedBatterStatArray[2], predictedBatterStatArray[3],
+                (int) predictedBatterStatArray[1], (int) predictedBatterStatArray[2], pAVG,
                 (int) predictedBatterStatArray[4], (int) predictedBatterStatArray[5], (int) predictedBatterStatArray[6],
-                (int) predictedBatterStatArray[7], (int) predictedBatterStatArray[8], predictedBatterStatArray[9], predictedBatterStatArray[10]);
+                (int) predictedBatterStatArray[7], (int) predictedBatterStatArray[8], predictedBatterStatArray[9],
+                predictedBatterStatArray[10], pOPS);
+    }
+
+    private PredictPitcherDTO predictPitcherStat(PitcherStat pitcherStat, Player player, String pitcherWeightDataPath) {
+        List<List<String>> pitcherWeightList = readCSV(pitcherWeightDataPath);
+        // G, IP, ERA, WHIP, W, L, SO, HLD, S, ER
+        double[] predictedPitcherStatArray = new double[PITCHER_PREDICT_FEATURE_COUNT];
+        int[] indexArray = {4, 11, 3, 27, 1, 2, 22, 10, 8, 15};
+        // Age,W,L,ERA,G,GS,CG,ShO,SV,BS,HLD,IP,TBF,H,R,ER,HR,BB,IBB,HBP,WP,BK,SO,K_9,BB_9,H_9,HR_9,WHIP,BABIP,LOB_PCT,FIP
+        double[] pitcherStatArray = makePitcherStatArray(pitcherStat, player);
+//        for (int i = 0; i < PITCHER_PREDICT_FEATURE_COUNT; i++) {
+//            double sum = 0;
+//            for (int j = 0; j < PITCHER_FEATURE_COUNT; j++) {
+//                sum += pitcherStatArray[j] * Double.parseDouble(pitcherWeightList.get(i + 1).get(j + 1));
+//            }
+//            pitcherStatArray[indexArray[i]] = sum;
+//        }
+        for (int i = 0; i < PITCHER_PREDICT_FEATURE_COUNT; i++) {
+            double sum = 0;
+            for (int j = 0; j < PITCHER_FEATURE_COUNT; j++) {
+                sum += pitcherStatArray[j] * Double.parseDouble(pitcherWeightList.get(i + 1).get(j + 1));
+            }
+            predictedPitcherStatArray[i] = Math.round(sum * 100) / 100.0;
+        }
+        double pIP = tuneIP(predictedPitcherStatArray[1]);
+        double pERA = Math.round((predictedPitcherStatArray[9] / predictedPitcherStatArray[2]) * 100) / 100.0;
+//        int pHLD = pIP > 100 ? 0 : Math.max((int) predictedPitcherStatArray[7], 0);
+//        int pSV = pIP > 100 ? 0 : Math.max((int) predictedPitcherStatArray[8], 0);
+        return PredictPitcherDTO.createDTO(player.getName(), player.getAge() + 1, (int) predictedPitcherStatArray[0],
+                pIP, pERA, predictedPitcherStatArray[3], (int) predictedPitcherStatArray[4],
+                (int) predictedPitcherStatArray[5], (int) predictedPitcherStatArray[6], (int) predictedPitcherStatArray[7], (int) predictedPitcherStatArray[8]);
     }
 
     private double[] makeBatterStatArray(BatterStat batterStat, Player player) {
@@ -145,36 +179,6 @@ public class PredictionService {
                                 (double) (batterStat.getAB() - batterStat.getSO() - batterStat.getHR() + batterStat.getSF());
         // BABIP = (H - HR) / (AB - BB - HBP - SO - HR);
         return batterStatArray;
-    }
-
-    private PredictPitcherDTO predictPitcherStat(PitcherStat pitcherStat, Player player, String pitcherWeightDataPath) {
-        List<List<String>> pitcherWeightList = readCSV(pitcherWeightDataPath);
-        // G, IP, ERA, WHIP, W, L, SO, HLD, S
-        double[] predictedPitcherStatArray = new double[PITCHER_PREDICT_FEATURE_COUNT];
-        int[] indexArray = {4, 11, 3, 27, 1, 2, 22, 10, 8};
-        // Age,W,L,ERA,G,GS,CG,ShO,SV,BS,HLD,IP,TBF,H,R,ER,HR,BB,IBB,HBP,WP,BK,SO,K_9,BB_9,H_9,HR_9,WHIP,BABIP,LOB_PCT,FIP
-        double[] pitcherStatArray = makePitcherStatArray(pitcherStat, player);
-//        for (int i = 0; i < PITCHER_PREDICT_FEATURE_COUNT; i++) {
-//            double sum = 0;
-//            for (int j = 0; j < PITCHER_FEATURE_COUNT; j++) {
-//                sum += pitcherStatArray[j] * Double.parseDouble(pitcherWeightList.get(i + 1).get(j + 1));
-//            }
-//            pitcherStatArray[indexArray[i]] = sum;
-//        }
-        for (int i = 0; i < PITCHER_PREDICT_FEATURE_COUNT; i++) {
-            double sum = 0;
-            for (int j = 0; j < PITCHER_FEATURE_COUNT; j++) {
-                sum += pitcherStatArray[j] * Double.parseDouble(pitcherWeightList.get(i + 1).get(j + 1));
-            }
-            predictedPitcherStatArray[i] = Math.round(sum * 100) / 100.0;
-        }
-        double pIP = tuneIP(predictedPitcherStatArray[1]);
-        double pERA = Math.round((predictedPitcherStatArray[2] * 0.75) * 100) / 100.0;
-//        int pHLD = pIP > 100 ? 0 : Math.max((int) predictedPitcherStatArray[7], 0);
-//        int pSV = pIP > 100 ? 0 : Math.max((int) predictedPitcherStatArray[8], 0);
-        return PredictPitcherDTO.createDTO(player.getName(), player.getAge() + 1, (int) predictedPitcherStatArray[0],
-                pIP, pERA, predictedPitcherStatArray[3], (int) predictedPitcherStatArray[4],
-                (int) predictedPitcherStatArray[5], (int) predictedPitcherStatArray[6], (int) predictedPitcherStatArray[7], (int) predictedPitcherStatArray[8]);
     }
 
     private double tuneIP(double v) {

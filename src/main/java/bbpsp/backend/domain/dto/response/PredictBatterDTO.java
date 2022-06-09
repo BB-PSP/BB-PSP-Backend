@@ -76,6 +76,9 @@ public class PredictBatterDTO {
     @ApiModelProperty(value = "예측 출루율", required = true, example = "0.378")
     private double pOBP;
 
+    @ApiModelProperty(value = "예측 OPS", required = true, example = "0.378")
+    private double pOPS;
+
 //    @ApiModelProperty(value = "예측 에러", required = true, example = "3")
 //    private int pE;
 //
@@ -86,13 +89,13 @@ public class PredictBatterDTO {
 //    private int pSF;
 
     public static PredictBatterDTO createDTO(String name, int age, int pG, int pAB, int pPA, double pAVG, int pR, int pRBI,
-                                             int pH, int pHR, int pBB, double pOBP, double pSLG) {
-        return new PredictBatterDTO(name, age, pG, pAB, pPA, pAVG, pR, pRBI, pH, pHR, pBB, pOBP, pSLG);
+                                             int pH, int pHR, int pBB, double pOBP, double pSLG, double pOPS) {
+        return new PredictBatterDTO(name, age, pG, pAB, pPA, pAVG, pR, pRBI, pH, pHR, pBB, pOBP, pSLG, pOPS);
     }
 
     // G, AB, PA, AVG, R, RBI, H, HR, BB, OBP, SLG
     private PredictBatterDTO(String name, int age, int pG, int pAB, int pPA, double pAVG, int pR, int pRBI,
-                             int pH, int pHR, int pBB, double pOBP, double pSLG) {
+                             int pH, int pHR, int pBB, double pOBP, double pSLG, double pOPS) {
         this.age = age;
         this.name = name;
         this.pG = pG;
@@ -106,5 +109,6 @@ public class PredictBatterDTO {
         this.pBB = pBB;
         this.pSLG = pSLG;
         this.pOBP = pOBP;
+        this.pOPS = pOPS;
     }
 }
