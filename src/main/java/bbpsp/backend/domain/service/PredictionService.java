@@ -133,7 +133,7 @@ public class PredictionService {
         int[] indexArray = {4, 11, 3, 27, 1, 2, 22, 10, 8, 15};
         // Age,W,L,ERA,G,GS,CG,ShO,SV,BS,HLD,IP,TBF,H,R,ER,HR,BB,IBB,HBP,WP,BK,SO,K_9,BB_9,H_9,HR_9,WHIP,BABIP,LOB_PCT,FIP
         double[] pitcherStatArray = makePitcherStatArray(pitcherStat, player);
-//
+
         for (int i = 0; i < predictedPitcherStatArray.length; i++) {
             double sum = 0;
             for (int j = 0; j < PITCHER_FEATURE_COUNT; j++) {
@@ -143,7 +143,7 @@ public class PredictionService {
         }
         tunePitcherOutlier(predictedPitcherStatArray);
         double pIP = tuneIP(predictedPitcherStatArray[1]);
-        double pERA = Math.round((predictedPitcherStatArray[9] / predictedPitcherStatArray[2]) * 100) / 100.0;
+        double pERA = Math.round(predictedPitcherStatArray[9] / predictedPitcherStatArray[1] * 9 * 100) / 100.0;
         return PredictPitcherDTO.createDTO(player.getName(), player.getAge() + 1, (int) predictedPitcherStatArray[0],
                 pIP, pERA, predictedPitcherStatArray[3], (int) predictedPitcherStatArray[4],
                 (int) predictedPitcherStatArray[5], (int) predictedPitcherStatArray[6], (int) predictedPitcherStatArray[7], (int) predictedPitcherStatArray[8]);
